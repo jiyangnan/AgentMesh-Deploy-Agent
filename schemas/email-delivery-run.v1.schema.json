@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/email-delivery-run.v1.json",
+  "title": "AgentMesh Deploy Email Delivery Run Revision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId",
+    "graphFingerprint", "emailDeliveryPlanId", "emailDeliveryPlanFingerprint",
+    "approvalId", "approvalFingerprint", "revision", "status", "send", "delivery",
+    "providerMutationsExecuted", "createdAt", "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "EmailDeliveryRun" },
+    "id": { "type": "string", "pattern": "^email-delivery-run-[a-f0-9-]{36}$" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "emailDeliveryPlanId": { "type": "string", "pattern": "^email-delivery-plan-[a-f0-9]{24}$" },
+    "emailDeliveryPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "approvalId": { "type": "string", "pattern": "^email-delivery-approval-[a-f0-9-]{36}$" },
+    "approvalFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "status": { "enum": ["running", "send-retryable", "waiting-external", "succeeded", "failed-terminal"] },
+    "send": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "attempt", "resultRef", "lastError", "emailId", "adapterPlanFingerprint", "idempotencyKey", "updatedAt"],
+      "properties": {
+        "status": { "$ref": "#/$defs/stepStatus" },
+        "attempt": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "resultRef": { "type": "string" },
+        "lastError": { "$ref": "#/$defs/error" },
+        "emailId": { "type": "string" },
+        "adapterPlanFingerprint": { "type": "string" },
+        "idempotencyKey": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "attempt", "resultRef", "lastError", "lastEvent", "nextPollAt", "timeoutAt", "updatedAt"],
+      "properties": {
+        "status": { "$ref": "#/$defs/stepStatus" },
+        "attempt": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "resultRef": { "type": "string" },
+        "lastError": { "$ref": "#/$defs/error" },
+        "lastEvent": { "type": "string" },
+        "nextPollAt": { "type": "string" },
+        "timeoutAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "providerMutationsExecuted": { "type": "integer", "minimum": 0, "maximum": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "stepStatus": {
+      "enum": ["pending", "running", "waiting-external", "succeeded", "failed-retryable", "failed-terminal"]
+    },
+    "error": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "retryable"],
+          "properties": {
+            "code": { "type": "string", "minLength": 1 },
+            "retryable": { "type": "boolean" }
+          }
+        }
+      ]
+    }
+  }
+}

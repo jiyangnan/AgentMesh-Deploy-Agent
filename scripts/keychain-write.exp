@@ -1,0 +1,34 @@
+#!/usr/bin/expect -f
+
+log_user 0
+set timeout 15
+
+set service [lindex $argv 0]
+set account [lindex $argv 1]
+set write_mode [lindex $argv 2]
+set secret [read stdin]
+regsub {\r?\n$} $secret {} secret
+
+set command [list security add-generic-password]
+if {$write_mode eq "overwrite"} {
+  lappend command -U
+}
+lappend command -s $service -a $account -w
+
+spawn {*}$command
+expect {
+  -re {password data for new item:} {}
+  timeout { exit 70 }
+  eof { exit 71 }
+}
+send -- "$secret\r"
+expect {
+  -re {retype password for new item:} {}
+  timeout { exit 72 }
+  eof { exit 73 }
+}
+send -- "$secret\r"
+expect eof
+
+set result [wait]
+exit [lindex $result 3]

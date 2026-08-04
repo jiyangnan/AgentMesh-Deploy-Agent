@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/backup-evidence.v1.json",
+  "title": "AgentMesh Deploy Backup Evidence",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId", "graphFingerprint", "configurationId", "configurationFingerprint", "migrationPlanId", "migrationPlanFingerprint", "adapterPlanId", "adapterPlanFingerprint", "provider", "backupType", "schemaInspection", "backup", "verification", "status", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "BackupEvidence" },
+    "id": { "type": "string", "pattern": "^backup-evidence-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "migrationPlanId": { "type": "string", "pattern": "^migration-plan-[a-f0-9]{24}$" },
+    "migrationPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "adapterPlanId": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+    "adapterPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "provider": { "const": "neon" },
+    "backupType": { "const": "neon-snapshot" },
+    "schemaInspection": {
+      "type": "object",
+      "required": ["receipt", "schemaFingerprint", "tableCount", "columnCount", "constraintCount", "observedAt"],
+      "properties": {
+        "receipt": { "$ref": "#/$defs/receiptRef" },
+        "schemaFingerprint": { "$ref": "#/$defs/fingerprint" },
+        "tableCount": { "type": "integer", "minimum": 0 },
+        "columnCount": { "type": "integer", "minimum": 0 },
+        "constraintCount": { "type": "integer", "minimum": 0 },
+        "observedAt": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "backup": {
+      "type": "object",
+      "required": ["resource", "createReceipt", "operationReceipt", "verifyReceipt", "verifiedAt"],
+      "properties": {
+        "resource": { "$ref": "#/$defs/backupResource" },
+        "createReceipt": { "$ref": "#/$defs/receiptRef" },
+        "operationReceipt": { "oneOf": [{ "$ref": "#/$defs/receiptRef" }, { "type": "null" }] },
+        "verifyReceipt": { "$ref": "#/$defs/receiptRef" },
+        "verifiedAt": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["providerVisible", "exactIdentityMatch", "operationComplete", "restoreTested", "rawSchemaPersisted", "sqlExecuted"],
+      "properties": {
+        "providerVisible": { "const": true },
+        "exactIdentityMatch": { "const": true },
+        "operationComplete": { "const": true },
+        "restoreTested": { "const": false },
+        "rawSchemaPersisted": { "const": false },
+        "sqlExecuted": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "status": { "const": "verified" },
+    "createdAt": { "type": "string" }
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "receiptRef": {
+      "type": "object",
+      "required": ["runId", "actionId", "sequence", "fingerprint"],
+      "properties": {
+        "runId": { "type": "string" },
+        "actionId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "fingerprint": { "$ref": "#/$defs/fingerprint" }
+      },
+      "additionalProperties": false
+    },
+    "backupResource": {
+      "type": "object",
+      "required": ["logicalId", "provider", "providerId", "type", "name", "lifecycle", "version", "attributes"],
+      "properties": {
+        "logicalId": { "type": "string", "minLength": 1 },
+        "provider": { "const": "neon" },
+        "providerId": { "type": "string", "minLength": 1 },
+        "type": { "const": "database.backup" },
+        "name": { "type": "string", "minLength": 1 },
+        "lifecycle": { "enum": ["managed", "adopted"] },
+        "version": { "type": "integer", "minimum": 1 },
+        "attributes": {
+          "type": "object",
+          "required": ["projectId", "sourceBranchId", "createdAt", "expiresAt", "manual", "fullSizeBytes", "diffSizeBytes", "migrationPlanId", "migrationPlanFingerprint", "snapshotPlanFingerprint", "restoreTested"],
+          "properties": {
+            "projectId": { "type": "string", "minLength": 1 },
+            "sourceBranchId": { "type": "string", "minLength": 1 },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "expiresAt": { "type": "string" },
+            "manual": { "type": "boolean" },
+            "fullSizeBytes": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }] },
+            "diffSizeBytes": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }] },
+            "migrationPlanId": { "type": "string", "pattern": "^migration-plan-[a-f0-9]{24}$" },
+            "migrationPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+            "snapshotPlanFingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "restoreTested": { "const": false }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

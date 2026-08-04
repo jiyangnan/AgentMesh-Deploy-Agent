@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/launch-configuration.v1.json",
+  "title": "AgentMesh Deploy Launch Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId", "graphFingerprint", "recipeId", "recipeFingerprint", "resourcePrefix", "domain", "runtime", "database", "email", "budget", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "LaunchConfiguration" },
+    "id": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "recipeId": { "type": "string", "pattern": "^recipe-[a-f0-9]{24}$" },
+    "recipeFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "resourcePrefix": { "type": "string", "pattern": "^[a-z][a-z0-9-]{2,31}$" },
+    "domain": { "type": "object" },
+    "runtime": { "type": "object" },
+    "database": { "type": "object" },
+    "email": { "type": "object" },
+    "budget": { "type": "object" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  }
+}

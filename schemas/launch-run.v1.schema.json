@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/launch-run.v1.json",
+  "title": "AgentMesh Deploy Launch Run",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "projectId", "graphId", "graphFingerprint", "revision", "mode", "status", "nodeStates", "createdAt", "updatedAt", "fingerprint"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "LaunchRun" },
+    "id": { "type": "string" },
+    "projectId": { "type": "string" },
+    "graphId": { "type": "string" },
+    "graphFingerprint": { "type": "string" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "mode": { "enum": ["dry-run", "execute"] },
+    "providerMode": { "enum": ["none", "fixture", "real", "sandbox"] },
+    "adapterPlanId": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+    "adapterPlanFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "sandboxProfileId": { "type": "string", "pattern": "^sandbox-[a-f0-9]{24}$" },
+    "sandboxProfileFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "sandboxPreflightId": { "type": "string", "pattern": "^sandbox-preflight-[a-f0-9]{24}$" },
+    "sandboxPreflightFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "transportProvenance": { "enum": ["native-cli-fixed-host", "injected-test"] },
+    "databaseRuntimeProfileId": { "type": "string", "pattern": "^database-runtime-[a-f0-9]{24}$" },
+    "databaseRuntimeProfileFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "status": { "type": "string" },
+    "nodeStates": { "type": "object" },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "providerMutationsExecuted": { "type": "integer", "minimum": 0 },
+    "fixtureMutationsExecuted": { "type": "integer", "minimum": 0 },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  },
+  "dependentRequired": {
+    "sandboxProfileId": ["sandboxProfileFingerprint"],
+    "sandboxProfileFingerprint": ["sandboxProfileId"],
+    "sandboxPreflightId": ["sandboxPreflightFingerprint", "sandboxProfileId", "sandboxProfileFingerprint"],
+    "sandboxPreflightFingerprint": ["sandboxPreflightId", "sandboxProfileId", "sandboxProfileFingerprint"],
+    "databaseRuntimeProfileId": ["databaseRuntimeProfileFingerprint", "sandboxProfileId"],
+    "databaseRuntimeProfileFingerprint": ["databaseRuntimeProfileId", "sandboxProfileId"]
+  },
+  "additionalProperties": false
+}

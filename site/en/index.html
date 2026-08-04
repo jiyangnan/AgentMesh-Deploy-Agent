@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgentMesh Deploy | Approval-Gated AI Deployment Agent</title>
+  <meta name="description" content="Plan and run product deployments from an immutable commit with read-only repository analysis, scoped approvals, evidence, and recovery." />
+  <meta property="og:title" content="AgentMesh Deploy — Independent deployment operations agent" />
+  <meta property="og:description" content="Product repositories stay read-only. Plans, approvals, provider changes, migrations, DNS, email, and recovery evidence live in an external control plane." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://deploy.agentmesh360.com/en/" />
+  <meta property="og:image" content="https://deploy.agentmesh360.com/assets/deploy-control-plane.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="theme-color" content="#087a62" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=product-mark-v1" />
+  <link rel="canonical" href="https://deploy.agentmesh360.com/en/" />
+  <link rel="alternate" hreflang="zh-CN" href="https://deploy.agentmesh360.com/" />
+  <link rel="alternate" hreflang="en" href="https://deploy.agentmesh360.com/en/" />
+  <link rel="alternate" hreflang="ja" href="https://deploy.agentmesh360.com/ja/" />
+  <link rel="alternate" hreflang="ko" href="https://deploy.agentmesh360.com/ko/" />
+  <link rel="alternate" hreflang="x-default" href="https://deploy.agentmesh360.com/" />
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="AgentMesh Deploy LLMs.txt" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script defer src="/assets/site.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"AgentMesh Deploy","url":"https://deploy.agentmesh360.com/","codeRepository":"https://github.com/jiyangnan/AgentMesh-Deploy-Agent","license":"https://www.apache.org/licenses/LICENSE-2.0","applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"0.2.1","isAccessibleForFree":true,"description":"An independent open-source deployment operations agent that analyzes product repositories and orchestrates providers through an external approval and evidence control plane."}
+  </script>
+  <script defer src="https://analytics.agentmesh360.com/script.js" data-website-id="dde37bb1-f07e-4a10-a349-719b4149923b" data-domains="deploy.agentmesh360.com"></script>
+</head>
+<body data-product-contract="independent-deploy-agent-v1" data-release="v0.2.1">
+  <header class="nav"><div class="nav-inner">
+    <a class="brand" href="#top" aria-label="AgentMesh Deploy"><span class="brand-mark" aria-hidden="true"></span>AgentMesh Deploy <small>· AgentMesh360</small></a>
+    <nav class="nav-links" aria-label="Primary"><a class="nav-section" href="#capabilities">Capabilities</a><a class="nav-section" href="#boundary">Boundaries</a><a class="nav-section" href="#workflow">Workflow</a><a class="nav-section" href="#faq">FAQ</a><span class="langs" aria-label="Language"><a href="/">中</a><a aria-current="page">EN</a><a href="/ja/">日</a><a href="/ko/">한</a></span><a class="nav-cta" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a></nav>
+  </div></header>
+
+  <main id="top">
+    <section class="hero"><div class="wrap"><div class="hero-copy">
+      <div class="eyebrow">Open source · Independent operations agent</div>
+      <h1>AgentMesh Deploy<span class="hero-line">Hand product launch to an operations agent with hard boundaries.</span></h1>
+      <p class="lede">When development is done, hand the Git repository to AgentMesh Deploy. It locks the commit, analyzes the stack, selects providers, and compiles a plan. Real changes happen only after you approve cost, database migration, DNS, and production cutover. Product repositories stay read-only; deployment state stays in an independent control plane.</p>
+      <div class="hero-actions"><a class="btn btn-secondary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">View the open-source repo →</a><a class="btn btn-secondary" href="#install">Install v0.2.1</a><a class="btn btn-primary" data-purchase-cta href="https://agentmesh360.com/app/#pricing">Get an AgentMesh360 pass</a></div>
+      <p class="pass-note"><strong>AgentMesh Deploy itself is free, open source, and needs no pass.</strong> This link purchases the shared pass used by AgentMesh360 cloud products such as Lecturecast and CreatorCut.</p>
+      <ul class="proof" aria-label="Release facts"><li>Apache 2.0</li><li>Node.js 20+</li><li>Versioned contracts</li><li>GitHub Release v0.2.1</li></ul>
+      <div class="agent-handoff" data-agent-handoff>
+        <div class="agent-handoff-top"><span class="agent-handoff-label">Paste into your Agent · operations handoff</span><button class="copy-agent-prompt" type="button" data-copy-prompt data-copied-label="Copied" data-failed-label="Copy failed" aria-label="Copy the AgentMesh Deploy operations handoff">Copy prompt</button></div>
+        <pre data-agent-prompt>Read https://github.com/jiyangnan/AgentMesh-Deploy-Agent, install the latest stable AgentMesh Deploy release, and take over shipping this product as an independent operations agent.
+
+Start with read-only repository analysis and lock the current Git commit. Do not modify the product repository remote, index, worktree, history, or any existing authentication, account, permission, or session system.
+
+Return the recommended provider route, budget, required credentials, database migration, DNS / Resend, and rollback plan. Before any cost, provider mutation, database write, DNS change, real email, production cutover, or deletion, request my explicit approval.</pre>
+      </div>
+    </div></div></section>
+
+    <section class="band band-white"><div class="wrap section-head"><div><div class="kicker">Why it exists</div><h2>Code complete is not the same as live.</h2></div><p class="section-copy">Domains, servers, databases, email, environment variables, CI/CD, migrations, health checks, and rollback are scattered across vendor consoles. AgentMesh Deploy turns them into one <strong>reviewable, approvable, recoverable</strong> release chain.</p></div></section>
+
+    <section class="band" id="architecture"><div class="wrap">
+      <div class="section-head"><div><div class="kicker">Independent control plane</div><h2>One Deploy Agent can operate many products.</h2></div><p class="section-copy">AgentMesh Deploy does not install a sidecar into product repositories. It creates an isolated checkout from a locked commit and stores Manifest, Plan, Approval, Evidence, and Run objects in an external Control Home. Required source changes are emitted only as patch proposals.</p></div>
+      <img class="architecture" src="/assets/deploy-control-plane.png" width="1600" height="900" alt="Read-only product repositories enter AgentMesh Deploy, pass through an external control home and human approval, then reach runtime, database, DNS, and email providers" />
+      <p class="caption">Product repositories are read-only inputs. Provider changes require external plans, approvals, and evidence.</p>
+    </div></section>
+
+    <section class="band band-white" id="capabilities"><div class="wrap">
+      <div class="section-head"><div><div class="kicker">Core capabilities</div><h2>From a source snapshot to a verified live result.</h2></div><p class="section-copy">Every action binds the same Commit, Graph, and plan fingerprint. After interruption, the agent reconciles provider facts before deciding whether to resume or hand control to a human.</p></div>
+      <div class="capabilities">
+        <article class="capability"><span class="cap-num">01 / SOURCE</span><h3>Read-only repository analysis</h3><p>Detect frameworks, build commands, environment requirements, and deployment shape in an isolated checkout without changing the worktree, remotes, or history.</p></article>
+        <article class="capability"><span class="cap-num">02 / PLAN</span><h3>Compiled provider plans</h3><p>Turn a high-level launch configuration into deterministic runtime, database, DNS, and email adapter actions.</p></article>
+        <article class="capability"><span class="cap-num">03 / APPROVAL</span><h3>Separate risk gates</h3><p>Network, provider mutations, cost, database migration, and production cutover are authorized independently.</p></article>
+        <article class="capability"><span class="cap-num">04 / DATABASE</span><h3>Evidence before migration</h3><p>Inspect schema, classify SQL, capture snapshot or backup evidence, then apply a migration bound to the expected target version.</p></article>
+        <article class="capability"><span class="cap-num">05 / EDGE</span><h3>Exact DNS and email changes</h3><p>Coordinate site routing and Resend domain records through reviewed change sets without fuzzy matches or unrelated record replacement.</p></article>
+        <article class="capability"><span class="cap-num">06 / RECOVERY</span><h3>Crash-safe continuation</h3><p>Persist intent before mutation and receipt after it. Resume reconciles existing resources before any replay.</p></article>
+      </div>
+    </div></section>
+
+    <section class="band"><div class="wrap"><div class="section-head"><div><div class="kicker">Provider adapters</div><h2>One workflow across six core providers.</h2></div><p class="section-copy">v0.2.1 publishes six core adapter contracts. Credentials are consumed only through Secret Refs; tokens, connection strings, and private keys never enter plans, runs, state, or logs.</p></div><div class="providers" aria-label="Supported providers"><div class="provider"><strong>Vercel</strong><span>Frontend / Preview</span></div><div class="provider"><strong>Railway</strong><span>Runtime / Service</span></div><div class="provider"><strong>Neon</strong><span>Postgres / Branch</span></div><div class="provider"><strong>Supabase</strong><span>Backend / Database</span></div><div class="provider"><strong>Cloudflare</strong><span>DNS / Edge</span></div><div class="provider"><strong>Resend</strong><span>Email / Domain</span></div></div></div></section>
+
+    <section class="band band-white" id="boundary"><div class="wrap">
+      <div class="section-head"><div><div class="kicker">Human-agent boundary</div><h2>The agent runs the workflow. Humans keep final authority.</h2></div><p class="section-copy">Automation should remove repetitive cross-vendor work, not remove accountability. Humans remain only at decisions that carry identity, money, data, or production risk.</p></div>
+      <div class="boundary">
+        <div class="boundary-row"><div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent handles</span><h3>Discovery and planning</h3><p>Analyze source, inspect provider capabilities, compare architecture options, and calculate expected resources and mutations.</p></div><div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">Human confirms</span><h3>Accounts and credentials</h3><p>Create vendor accounts, complete identity or payment steps, issue least-privilege tokens, and choose a secret backend.</p></div></div>
+        <div class="boundary-row"><div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent handles</span><h3>Candidate environment and verification</h3><p>Create isolated projects, deploy the locked commit, and verify HTTPS, API, database version, and email-domain state.</p></div><div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">Human confirms</span><h3>Cost and data risk</h3><p>Approve paid plans, domain purchases, migrations, restores, and any operation that may affect existing data.</p></div></div>
+        <div class="boundary-row"><div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent handles</span><h3>Evidence, resume, and rollback plans</h3><p>Persist immutable receipts, detect drift, reconcile uncertain writes, and generate exact recovery steps.</p></div><div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">Human confirms</span><h3>Production cutover and deletion</h3><p>Approve production DNS, real email sending, traffic cutover, resource deletion, and destructive database operations.</p></div></div>
+      </div>
+    </div></section>
+
+    <section class="band" id="workflow"><div class="wrap">
+      <div class="section-head"><div><div class="kicker">First launch</div><h2>Let your development agent perform an operations handoff.</h2></div><p class="section-copy">The CLI returns structured <code>nextActions</code>. A receiving agent does not need to guess the next command or improvise across six vendor consoles.</p></div>
+      <div class="steps"><div class="step"><span class="step-num">01</span><h3>Register the product</h3><p>Provide a local repository or remote Git URL. AgentMesh Deploy records the source and locks an immutable commit.</p></div><div class="step"><span class="step-num">02</span><h3>Analyze and choose a route</h3><p>Detect the stack, compare Vercel, Railway, Neon, and Supabase options, then ask you to approve provider and budget choices.</p></div><div class="step"><span class="step-num">03</span><h3>Connect restricted credentials</h3><p>Create least-privilege tokens following CLI guidance and store only references to Keychain, 1Password, or another backend.</p></div><div class="step"><span class="step-num">04</span><h3>Deploy a candidate</h3><p>After Sandbox Profile, Approval, and Preflight, create isolated resources and verify the locked commit.</p></div><div class="step"><span class="step-num">05</span><h3>Approve production cutover</h3><p>Review database, DNS, email, and rollback evidence before any production change.</p></div></div>
+      <div class="terminal" id="install" aria-label="Installation example"><div class="terminal-top">agentmesh-deploy · GitHub Release install</div><pre><span class="prompt">$</span> gh release download v0.2.1 --repo jiyangnan/AgentMesh-Deploy-Agent --pattern 'agentmesh-deploy-*.tgz'
+<span class="prompt">$</span> npm install --global ./agentmesh-deploy-0.2.1.tgz
+<span class="prompt">$</span> agentmesh-deploy version
+<span class="success">0.2.1</span>
+
+<span class="prompt">$</span> agentmesh-deploy project add --repo /path/to/product --id my-saas --name "My SaaS" --json
+<span class="prompt">$</span> agentmesh-deploy analyze my-saas --json
+<span class="output">nextActions → review configuration → connect providers → sandbox preflight</span></pre></div>
+    </div></section>
+
+    <section class="band band-white" id="faq"><div class="wrap"><div class="kicker">Common questions</div><h2>FAQ.</h2><div class="faq">
+      <details><summary>Will it write files into my product repository?</summary><div class="faq-answer">V2 does not by default. The product repository is a read-only source and deployment state lives in an external Control Home. Required code changes are emitted as patch proposals for the repository owner.</div></details>
+      <details><summary>Do I need an AgentMesh360 account?</summary><div class="faq-answer">No. AgentMesh Deploy is an Apache 2.0 open-source CLI. You need accounts and least-privilege credentials for the providers you choose, and provider costs remain on those accounts.</div></details>
+      <details><summary>Can it buy domains, upgrade plans, or switch production traffic automatically?</summary><div class="faq-answer">It can plan and guide those workflows, but it never performs them by default. Purchases, paid upgrades, database risk, production DNS, email sending, cutover, and deletion each require explicit current authorization.</div></details>
+      <details><summary>Where are credentials stored?</summary><div class="faq-answer">Persistent objects store only Secret Refs such as <code>keychain://</code>, <code>op://</code>, or custom <code>secret://</code> references. Raw values never enter Plan, Run, State, Receipt, or logs.</div></details>
+      <details><summary>Can an interrupted run create duplicate resources?</summary><div class="faq-answer">Mutations persist intent before the call and a receipt after it. Resume checks provider facts first and replays only when the resource is proven absent and the budget still allows it.</div></details>
+    </div></div></section>
+
+    <section class="band closing"><div class="wrap section-head"><div><div class="kicker">Start the handoff</div><h2>When the next product is built, hand launch to the Deploy Agent.</h2></div><div><p class="section-copy">Read the installation and agent guidance in the public repository. Start with read-only analysis and a sandbox before approving real provider changes.</p><div class="hero-actions"><a class="btn btn-primary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">Open GitHub →</a><a class="btn btn-secondary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/releases/tag/v0.2.1">View v0.2.1 Release</a></div></div></div></section>
+  </main>
+
+  <footer class="foot"><div class="wrap foot-inner"><div><div class="brand"><span class="brand-mark" aria-hidden="true"></span>AgentMesh Deploy <small>· AgentMesh360</small></div><div>Independent, auditable, and human-authorized.</div><div class="machine-note">Machine-assisted translation.</div></div><div class="foot-links"><a href="https://agentmesh360.com/en/">AgentMesh360</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/releases">Releases</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/blob/main/LICENSE">Apache 2.0</a><span>© 2026</span></div></div></footer>
+</body>
+</html>

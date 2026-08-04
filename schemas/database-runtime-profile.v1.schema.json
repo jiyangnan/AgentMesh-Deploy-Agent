@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/database-runtime-profile.v1.json",
+  "title": "AgentMesh Deploy Database Runtime Profile",
+  "type": "object",
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId", "graphFingerprint",
+    "configurationId", "configurationFingerprint", "migrationPlanId", "migrationPlanFingerprint",
+    "backupEvidenceId", "backupEvidenceFingerprint", "adapterPlanId", "adapterPlanFingerprint",
+    "provider", "providerProjectId", "branchId", "databaseName", "connectionId",
+    "connectionSecretRef", "allowedHosts", "baselineSchemaFingerprint", "expectedSchemaVersion",
+    "classification", "migrationCount", "statementCount", "ledger", "allowSqlExecution",
+    "approvedBy", "createdAt", "expiresAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "DatabaseRuntimeProfile" },
+    "id": { "type": "string", "pattern": "^database-runtime-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "configurationId": { "type": "string", "minLength": 1 },
+    "configurationFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "migrationPlanId": { "type": "string", "pattern": "^migration-plan-[a-f0-9]{24}$" },
+    "migrationPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "backupEvidenceId": { "type": "string", "pattern": "^backup-evidence-[a-f0-9]{24}$" },
+    "backupEvidenceFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "adapterPlanId": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+    "adapterPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "provider": { "const": "neon" },
+    "providerProjectId": { "type": "string", "minLength": 1 },
+    "branchId": { "type": "string", "minLength": 1 },
+    "databaseName": { "type": "string", "minLength": 1 },
+    "connectionId": { "type": "string", "minLength": 1 },
+    "connectionSecretRef": { "type": "string", "pattern": "^(env|keychain|op|secret)://[A-Za-z0-9._/-]+$" },
+    "allowedHosts": {
+      "type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9.-]+$" }
+    },
+    "baselineSchemaFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "expectedSchemaVersion": { "type": "string", "pattern": "^[A-Za-z0-9._-]{1,64}$" },
+    "classification": { "enum": ["additive", "reversible", "destructive", "unknown"] },
+    "migrationCount": { "type": "integer", "minimum": 1 },
+    "statementCount": { "type": "integer", "minimum": 1 },
+    "ledger": {
+      "type": "object",
+      "required": ["schema", "table", "ownership"],
+      "properties": {
+        "schema": { "const": "agentmesh_deploy" },
+        "table": { "const": "migration_ledger" },
+        "ownership": { "const": "immutable-plan-and-backup-fingerprints" }
+      },
+      "additionalProperties": false
+    },
+    "allowSqlExecution": { "const": true },
+    "approvedBy": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}

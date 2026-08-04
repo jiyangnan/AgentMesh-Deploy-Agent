@@ -1,0 +1,435 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/deploy-manifest.v1.json",
+  "title": "AgentMesh Deploy Manifest v1",
+  "description": "Machine-readable contract for .agentmesh-deploy/manifest.json.",
+  "type": "object",
+  "required": ["version", "app", "runtime", "target", "commands"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "https://agentmesh360.com/schemas/deploy-manifest.v1.json"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "app": {
+      "type": "object",
+      "required": ["id", "name", "root"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "root": {
+          "type": "string",
+          "minLength": 1,
+          "default": "."
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["type", "packageManager"],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["node", "python"]
+        },
+        "packageManager": {
+          "type": "string",
+          "enum": ["npm", "pnpm", "yarn", "bun", "uv", "pip", "poetry"]
+        },
+        "node": {
+          "type": "string"
+        },
+        "frameworks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "required": ["provider", "type"],
+      "additionalProperties": true,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["cloudflare", "digitalocean"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["cloudflare-workers", "docker-compose-caddy"]
+        },
+        "environment": {
+          "type": "string",
+          "default": "production"
+        }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "properties": {
+        "install": {
+          "type": "string"
+        },
+        "build": {
+          "type": "string"
+        },
+        "deploy": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "required": {
+          "$ref": "#/$defs/envKeyArray"
+        },
+        "generated": {
+          "$ref": "#/$defs/envKeyArray"
+        },
+        "provider": {
+          "$ref": "#/$defs/envKeyArray"
+        },
+        "copyFromShell": {
+          "$ref": "#/$defs/envKeyArray"
+        }
+      }
+    },
+    "domain": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "production": {
+          "type": "string",
+          "pattern": "^(|(?!(?:https?://))[^/\\s]+)$"
+        },
+        "root": {
+          "type": "string"
+        },
+        "registration": {
+          "$ref": "#/$defs/domainRegistration"
+        },
+        "zone": {
+          "$ref": "#/$defs/domainZone"
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["docker-compose-caddy"]
+        },
+        "composeFile": {
+          "type": "string"
+        },
+        "caddyFile": {
+          "type": "string"
+        },
+        "productionDoc": {
+          "type": "string"
+        },
+        "productionDomain": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "infrastructure": {
+          "$ref": "#/$defs/infrastructure"
+        },
+        "dns": {
+          "$ref": "#/$defs/dns"
+        }
+      }
+    },
+    "github": {
+      "type": "object",
+      "additionalProperties": true,
+      "anyOf": [
+        {
+          "properties": {
+            "enabled": {
+              "const": false
+            }
+          },
+          "required": ["enabled"]
+        },
+        {
+          "required": ["repo"]
+        }
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "repo": {
+          "type": "string",
+          "pattern": "^([A-Za-z0-9._-]+|[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]+)$"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["private", "public", "internal"],
+          "default": "private"
+        },
+        "actionsSecrets": {
+          "$ref": "#/$defs/envKeyArray"
+        },
+        "deployPaths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*\\\\)(?!.*[\\r\\n]).+$"
+          }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "defaultMode": {
+          "type": "string",
+          "default": "dry-run"
+        },
+        "realExecutionRequires": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "envKey": {
+      "type": "string",
+      "pattern": "^[A-Z_][A-Z0-9_]*$"
+    },
+    "envKeyArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/envKey"
+      }
+    },
+    "resource": {
+      "type": "object",
+      "required": ["id", "type", "name"],
+      "additionalProperties": true,
+      "anyOf": [
+        {
+          "properties": {
+            "enabled": {
+              "const": false
+            }
+          },
+          "required": ["enabled"]
+        },
+        {
+          "required": ["binding"]
+        }
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "type": {
+          "type": "string",
+          "enum": ["cloudflare.d1", "cloudflare.r2", "cloudflare.kv"]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "binding": {
+          "$ref": "#/$defs/envKey"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "infrastructure": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["digitalocean"]
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["adopt-existing", "provision"]
+        },
+        "dropletName": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "sshUser": {
+          "type": "string"
+        },
+        "sshPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "sshHost": {
+          "type": "string"
+        },
+        "appDir": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "network": {
+          "type": "string"
+        },
+        "caddyContainer": {
+          "type": "string"
+        },
+        "caddyMode": {
+          "type": "string",
+          "enum": ["shared-container", "managed-container", "host"]
+        }
+      }
+    },
+    "dns": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["cloudflare", "manual"]
+        },
+        "recordType": {
+          "type": "string",
+          "enum": ["A", "AAAA", "CNAME"]
+        },
+        "name": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "proxied": {
+          "type": "boolean"
+        },
+        "ttl": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "domainRegistration": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["manual", "cloudflare", "porkbun"]
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["adopt-existing", "register"]
+        },
+        "root": {
+          "type": "string"
+        },
+        "years": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "privacy": {
+          "type": "boolean"
+        },
+        "agreeToTerms": {
+          "type": "boolean"
+        },
+        "maxCostUsd": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "autoRenew": {
+          "type": "boolean"
+        },
+        "accountIdEnv": {
+          "$ref": "#/$defs/envKey"
+        },
+        "apiTokenEnv": {
+          "$ref": "#/$defs/envKey"
+        },
+        "apiKeyEnv": {
+          "$ref": "#/$defs/envKey"
+        },
+        "secretApiKeyEnv": {
+          "$ref": "#/$defs/envKey"
+        }
+      }
+    },
+    "domainZone": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["cloudflare", "manual"]
+        },
+        "name": {
+          "type": "string"
+        },
+        "accountIdEnv": {
+          "$ref": "#/$defs/envKey"
+        }
+      }
+    }
+  }
+}

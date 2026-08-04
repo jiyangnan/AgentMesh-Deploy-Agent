@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/deployment-state.v2.json",
+  "title": "AgentMesh Deploy V2 Deployment State",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "projectId", "appId", "revision", "sourceRef", "nodes", "resources", "facts", "runs"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "kind": { "const": "DeploymentState" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "appId": { "type": "string", "minLength": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "sourceRef": { "type": "object" },
+    "nodes": { "type": "object" },
+    "resources": { "type": "object" },
+    "facts": { "type": "object" },
+    "runs": { "type": "array" },
+    "migration": { "type": "object" }
+  },
+  "additionalProperties": false
+}

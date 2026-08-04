@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">AgentMesh Deploy</title>
+  <rect x="1" y="1" width="62" height="62" rx="7" fill="#191B19"/>
+  <path d="M18 43.5h28M18 33h28M18 22.5h28" stroke="#7E8A84" stroke-width="3" stroke-linecap="round"/>
+  <path d="M32 47V18" stroke="#FFFCF8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="m24.5 25.5 7.5-7.5 7.5 7.5" fill="none" stroke="#FFD400" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

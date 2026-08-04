@@ -1,0 +1,51 @@
+{
+  "name": "@agentmesh/deploy",
+  "version": "0.2.1",
+  "description": "Independent AI deployment-operations agent and CLI for product repositories.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiyangnan/AgentMesh-Deploy-Agent.git"
+  },
+  "homepage": "https://deploy.agentmesh360.com/",
+  "bugs": {
+    "url": "https://github.com/jiyangnan/AgentMesh-Deploy-Agent/issues"
+  },
+  "keywords": [
+    "agentmesh",
+    "deployment",
+    "ai-agent",
+    "devops",
+    "cloudflare",
+    "railway",
+    "vercel",
+    "neon",
+    "supabase",
+    "resend",
+    "cli"
+  ],
+  "files": [
+    "bin",
+    "src",
+    "schemas",
+    "examples",
+    "docs",
+    "scripts/keychain-write.exp",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "agentmesh-deploy": "bin/agentmesh-deploy.js",
+    "amd": "bin/agentmesh-deploy.js"
+  },
+  "scripts": {
+    "check": "node --check bin/agentmesh-deploy.js && node --check src/*.js && node --check src/adapters/*.js && node --check scripts/validate-site.mjs && node --check examples/minimal-worker/src/worker.js && node --check examples/minimal-worker/scripts/deploy-preview.mjs && node --check examples/isolated-saas/build.js && node --check examples/isolated-saas/server.js && node scripts/validate-site.mjs site",
+    "pack:check": "npm pack --dry-run --ignore-scripts"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/acceptance-cleanup-attestation.v1.schema.json",
+  "title": "AgentMesh Deploy Acceptance Cleanup Attestation V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "id", "fingerprint", "projectId", "sourceCommit", "cleanupPlanId", "cleanupPlanFingerprint", "actor", "verificationBasis", "dispositions", "status", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "AcceptanceCleanupAttestation" },
+    "id": { "type": "string", "pattern": "^cleanup-attestation-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/sha256" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" },
+    "cleanupPlanId": { "type": "string", "pattern": "^cleanup-plan-[a-f0-9]{24}$" },
+    "cleanupPlanFingerprint": { "$ref": "#/$defs/sha256" },
+    "actor": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$" },
+    "verificationBasis": { "const": "human-attestation" },
+    "dispositions": { "type": "array", "items": { "$ref": "#/$defs/disposition" } },
+    "status": { "const": "completed" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "disposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["itemId", "status", "reason", "verifiedAt", "costStoppedAt"],
+      "properties": {
+        "itemId": { "type": "string", "pattern": "^(?:cleanup-item|cleanup-unresolved)-[a-f0-9]{24}$" },
+        "status": { "enum": ["deleted", "restored", "retained", "no-action-required"] },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "costStoppedAt": { "oneOf": [{ "const": "" }, { "type": "string", "format": "date-time" }] }
+      }
+    }
+  }
+}

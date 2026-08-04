@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/email-delivery-approval-revocation.v1.json",
+  "title": "AgentMesh Deploy Email Delivery Approval Revocation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "fingerprint", "projectId", "graphFingerprint",
+    "emailDeliveryPlanId", "emailDeliveryPlanFingerprint", "approvalId",
+    "approvalFingerprint", "revokedBy", "revokedAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "EmailDeliveryApprovalRevocation" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "emailDeliveryPlanId": { "type": "string", "pattern": "^email-delivery-plan-[a-f0-9]{24}$" },
+    "emailDeliveryPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "approvalId": { "type": "string", "pattern": "^email-delivery-approval-[a-f0-9-]{36}$" },
+    "approvalFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "revokedBy": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "revokedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/product-verification-evidence.v1.json",
+  "title": "AgentMesh Deploy Product Verification Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId",
+    "graphFingerprint", "configurationId", "configurationFingerprint", "planId",
+    "planFingerprint", "phase", "target", "status", "checks", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "ProductVerificationEvidence" },
+    "id": { "type": "string", "pattern": "^product-verification-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "planId": { "type": "string", "pattern": "^verification-plan-[a-f0-9]{24}$" },
+    "planFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "phase": { "enum": ["candidate", "production"] },
+    "target": { "$ref": "#/$defs/target" },
+    "status": { "enum": ["passed", "failed", "needs-human"] },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/result" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "url", "hostname"],
+      "properties": {
+        "source": { "enum": ["candidate-state", "production-configuration"] },
+        "url": { "type": "string", "pattern": "^https://" },
+        "hostname": { "type": "string", "minLength": 1, "maxLength": 253 }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "contractCheckId", "capability", "mode", "required", "status",
+        "reasonCode", "latencyMs", "statusCode", "contentType", "evidenceRefs", "handoff"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^(candidate|production)\\.[a-z0-9][a-z0-9._-]{0,126}$" },
+        "contractCheckId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+        "capability": { "enum": ["https", "api", "release", "database", "auth", "email-domain", "email-delivery", "rollback"] },
+        "mode": { "enum": ["http", "control", "runtime", "human"] },
+        "required": { "type": "boolean" },
+        "status": { "enum": ["passed", "failed", "needs-human", "skipped"] },
+        "reasonCode": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{0,63}$" },
+        "latencyMs": { "type": "integer", "minimum": 0, "maximum": 3600000 },
+        "statusCode": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+        "contentType": { "type": "string", "maxLength": 127 },
+        "evidenceRefs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+        },
+        "handoff": { "type": "string", "maxLength": 256 }
+      }
+    }
+  }
+}

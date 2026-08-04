@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/human-handoff.v1.json",
+  "title": "AgentMesh Deploy Human Handoff V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "id", "fingerprint", "projectId", "sourceRef", "bootstrapPlanRef", "candidateEvidenceRef", "phase", "owner", "deadline", "tasks", "resume", "status", "safety", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "HumanHandoff" },
+    "id": { "type": "string", "pattern": "^human-handoff-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/sha256" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "sourceRef": { "$ref": "#/$defs/sourceRef" },
+    "bootstrapPlanRef": { "$ref": "#/$defs/bootstrapPlanRef" },
+    "candidateEvidenceRef": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/candidateEvidenceRef" }
+      ]
+    },
+    "phase": { "enum": ["bootstrap", "configuration", "cutover"] },
+    "owner": { "$ref": "#/$defs/actor" },
+    "deadline": { "type": "string", "format": "date-time" },
+    "tasks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/task" } },
+    "resume": {
+      "type": "object", "additionalProperties": false,
+      "required": ["condition", "bootstrapPlanId", "next"],
+      "properties": {
+        "condition": { "const": "all-required-tasks-attested-without-blockers" },
+        "bootstrapPlanId": { "type": "string", "pattern": "^bootstrap-plan-[a-f0-9]{24}$" },
+        "next": { "enum": ["capture-secrets-and-probe-connections", "create-launch-configuration-and-review", "apply-approved-production-cutover"] }
+      }
+    },
+    "status": { "const": "pending-human" },
+    "safety": {
+      "type": "object", "additionalProperties": false,
+      "required": ["browserActionsExecuted", "providerMutationsExecuted", "secretValuesAllowed", "productRepositoryWritesAllowed"],
+      "properties": {
+        "browserActionsExecuted": { "const": 0 },
+        "providerMutationsExecuted": { "const": 0 },
+        "secretValuesAllowed": { "const": false },
+        "productRepositoryWritesAllowed": { "const": false }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "actor": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$" },
+    "sourceRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "locator", "commit"],
+      "properties": {
+        "kind": { "enum": ["local-git", "remote-git"] },
+        "locator": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[a-fA-F0-9]{40,64}$" }
+      }
+    },
+    "bootstrapPlanRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "fingerprint", "recipeId", "recipeFingerprint"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^bootstrap-plan-[a-f0-9]{24}$" },
+        "fingerprint": { "$ref": "#/$defs/sha256" },
+        "recipeId": { "type": "string", "pattern": "^recipe-[a-f0-9]{24}$" },
+        "recipeFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "candidateEvidenceRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "fingerprint"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^product-verification-[a-f0-9]{24}$" },
+        "fingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "task": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "scope", "providerId", "category", "action", "title", "reason", "docs", "allowNotApplicable", "completionPolicy"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^human-task-[a-f0-9]{24}$" },
+        "scope": { "enum": ["provider", "project"] },
+        "providerId": { "type": "string" },
+        "category": { "enum": ["identity", "security", "legal", "billing", "credential", "organization", "domain", "product-decision", "production-risk", "interactive-challenge"] },
+        "action": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "docs": { "type": "array", "items": { "type": "string", "format": "uri" }, "uniqueItems": true },
+        "allowNotApplicable": { "type": "boolean" },
+        "completionPolicy": { "const": "human-attestation-without-secret-values" }
+      }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/sandbox-preflight-evidence.v1.json",
+  "title": "AgentMesh Deploy Sandbox Preflight Evidence",
+  "type": "object",
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId", "graphFingerprint",
+    "adapterPlanId", "adapterPlanFingerprint", "sandboxProfileId", "sandboxProfileFingerprint",
+    "connectionChecks", "approvalChecks", "runtimeChecks", "mutationBudget", "blockers",
+    "status", "checkedAt", "validUntil"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "SandboxPreflightEvidence" },
+    "id": { "type": "string", "pattern": "^sandbox-preflight-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "adapterPlanId": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+    "adapterPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "sandboxProfileId": { "type": "string", "pattern": "^sandbox-[a-f0-9]{24}$" },
+    "sandboxProfileFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "databaseRuntimeProfileId": { "type": "string", "pattern": "^database-runtime-[a-f0-9]{24}$" },
+    "databaseRuntimeProfileFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "connectionChecks": { "type": "array", "items": { "$ref": "#/$defs/connectionCheck" } },
+    "quotaChecks": { "type": "array", "items": { "$ref": "#/$defs/quotaCheck" } },
+    "approvalChecks": { "type": "array", "items": { "$ref": "#/$defs/approvalCheck" } },
+    "runtimeChecks": { "type": "array", "items": { "$ref": "#/$defs/runtimeCheck" } },
+    "mutationBudget": { "$ref": "#/$defs/mutationBudget" },
+    "blockers": { "type": "array", "items": { "$ref": "#/$defs/blocker" } },
+    "status": { "enum": ["ready", "blocked"] },
+    "checkedAt": { "type": "string", "format": "date-time" },
+    "validUntil": { "type": "string", "format": "date-time" }
+  },
+  "dependentRequired": {
+    "databaseRuntimeProfileId": ["databaseRuntimeProfileFingerprint"],
+    "databaseRuntimeProfileFingerprint": ["databaseRuntimeProfileId"]
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "secretCheck": {
+      "type": "object",
+      "required": ["name", "source", "status"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "source": { "enum": ["env", "keychain", "op", "secret"] },
+        "status": { "enum": ["ready", "missing", "not-probed", "unavailable"] }
+      },
+      "additionalProperties": false
+    },
+    "connectionCheck": {
+      "type": "object",
+      "required": ["connectionId", "provider", "version", "status", "secretChecks"],
+      "properties": {
+        "connectionId": { "type": "string", "minLength": 1 },
+        "provider": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["ready", "blocked", "missing", "unverified", "archived"] },
+        "secretChecks": { "type": "array", "items": { "$ref": "#/$defs/secretCheck" } }
+      },
+      "additionalProperties": false
+    },
+    "quotaCheck": {
+      "type": "object",
+      "required": ["connectionId", "provider", "quota", "status", "used", "limit"],
+      "properties": {
+        "connectionId": { "type": "string", "minLength": 1 },
+        "provider": { "const": "supabase" },
+        "quota": { "const": "active-free-projects" },
+        "status": { "enum": ["ready", "blocked", "unknown"] },
+        "used": { "type": "integer", "minimum": -1 },
+        "limit": { "const": 2 }
+      },
+      "additionalProperties": false
+    },
+    "approvalCheck": {
+      "type": "object",
+      "required": ["nodeId", "status", "approvalId", "fingerprint", "expiresAt"],
+      "properties": {
+        "nodeId": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["ready", "missing"] },
+        "approvalId": { "type": "string" },
+        "fingerprint": { "type": "string" },
+        "expiresAt": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "runtimeCheck": {
+      "type": "object",
+      "required": ["actionId", "provider", "method", "capability", "status"],
+      "properties": {
+        "actionId": { "type": "string", "minLength": 1 },
+        "provider": { "type": "string", "minLength": 1 },
+        "method": { "type": "string", "minLength": 1 },
+        "capability": { "enum": ["secret-sink", "secret-source", "migration-executor"] },
+        "status": { "enum": ["ready", "missing"] }
+      },
+      "additionalProperties": false
+    },
+    "mutationBudget": {
+      "type": "object",
+      "required": ["estimated", "maximum", "remaining", "status"],
+      "properties": {
+        "estimated": { "type": "integer", "minimum": 0 },
+        "maximum": { "type": "integer", "minimum": 0 },
+        "used": { "type": "integer", "minimum": 0 },
+        "remaining": { "type": "integer", "minimum": 0 },
+        "required": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["ready", "blocked"] }
+      },
+      "additionalProperties": false
+    },
+    "blocker": {
+      "type": "object",
+      "required": ["code", "scope", "message"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]+$" },
+        "scope": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

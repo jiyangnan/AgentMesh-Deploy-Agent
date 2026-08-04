@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>审批式 DevOps：让 AI Agent 自动化部署，但保留生产控制权</title>
+  <meta name="description" content="审批式 DevOps 指南：如何把计划、费用、数据库迁移、DNS、邮件、生产切流和恢复拆成独立授权，让 AI 部署 Agent 自动化但不越权。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://deploy.agentmesh360.com/guides/approval-gated-devops/" />
+  <meta property="og:title" content="审批式 DevOps：自动化部署，不交出生产控制权" />
+  <meta property="og:description" content="一次模糊的“帮我上线”不该同时授权付费、迁移数据库、改 DNS 和切生产。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://deploy.agentmesh360.com/guides/approval-gated-devops/" />
+  <meta property="og:image" content="https://deploy.agentmesh360.com/assets/deploy-control-plane.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=product-mark-v1" />
+  <link rel="stylesheet" href="/seo.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {"@type": "Article", "headline": "审批式 DevOps：让 AI Agent 自动化部署，但保留生产控制权", "datePublished": "2026-07-30", "dateModified": "2026-07-30", "inLanguage": "zh-CN", "author": {"@type": "Organization", "name": "AgentMesh360", "url": "https://agentmesh360.com/"}},
+      {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "AgentMesh Deploy", "item": "https://deploy.agentmesh360.com/"},
+        {"@type": "ListItem", "position": 2, "name": "审批式 DevOps", "item": "https://deploy.agentmesh360.com/guides/approval-gated-devops/"}
+      ]},
+      {"@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": "为什么不能用一次授权完成所有部署动作？", "acceptedAnswer": {"@type": "Answer", "text": "不同动作的影响、费用和可恢复性不同。创建候选环境、迁移数据库、修改正式 DNS 与发送真实邮件不应共享一个模糊授权。"}},
+        {"@type": "Question", "name": "审批会不会让自动化失去意义？", "acceptedAnswer": {"@type": "Answer", "text": "不会。Agent 仍可自动完成分析、计划、预检、候选部署、证据收集与低风险操作；人工只在高影响决策点介入。"}},
+        {"@type": "Question", "name": "凭证如何避免进入日志和计划？", "acceptedAnswer": {"@type": "Answer", "text": "持久计划只保存 Secret Ref，例如 keychain、1Password 或自定义 secret 引用，真实值在执行时由受限解析器取得。"}}
+      ]}
+    ]
+  }
+  </script>
+</head>
+<body data-product-contract="independent-deploy-agent-v1">
+  <header class="site-nav"><div class="container nav-inner"><a class="brand" href="/">AgentMesh Deploy</a><nav class="nav-links" aria-label="页面导航"><a href="/guides/ai-deployment-agent/">AI 部署 Agent</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a><a href="https://agentmesh360.com/guides/local-first-ai/">本地优先</a></nav></div></header>
+  <main>
+    <section class="hero"><div class="container"><p class="eyebrow">Approval-gated DevOps</p><h1>把自动化放在审批之间，而不是绕过审批。</h1><p class="lead">Agent 可以把准备工作做到极致：读仓库、规划资源、验证候选、收集证据。生产所有权仍属于人，尤其是付费、数据库、DNS、邮件和正式流量。</p><div class="hero-actions"><a class="button primary" href="/">查看 AgentMesh Deploy</a><a class="button" href="#matrix">看审批矩阵</a></div></div></section>
+    <article class="container article">
+      <nav class="toc" aria-label="本页目录"><strong>本页内容</strong><a href="#principles">设计原则</a><a href="#matrix">审批矩阵</a><a href="#evidence">证据要求</a><a href="#faq">常见问题</a></nav>
+      <section id="principles">
+        <h2>审批式 DevOps 的四个设计原则</h2>
+        <div class="grid">
+          <article class="card"><h3>对象要准确</h3><p>授权必须绑定具体项目、供应商、资源、环境和当前计划版本。不能把“允许部署测试环境”解释成“允许修改生产 DNS”。</p></article>
+          <article class="card"><h3>影响要可见</h3><p>批准前展示预计费用、数据风险、停机窗口、外部收件人、生产域名和回滚路径，而不是只显示一条内部命令。</p></article>
+          <article class="card"><h3>授权要有时效</h3><p>一次批准只适用于当前任务和当前对象。计划、Commit、资源或预算变化后，需要重新确认。</p></article>
+          <article class="card"><h3>结果要能对账</h3><p>动作前写 Intent，动作后写 Receipt。中断后先读取供应商事实，确定动作是否已经发生，再决定继续还是恢复。</p></article>
+        </div>
+      </section>
+      <section id="matrix">
+        <h2>哪些动作可以自动，哪些必须停下</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>动作</th><th>默认策略</th><th>批准前至少展示</th></tr></thead>
+            <tbody>
+              <tr><td>只读分析仓库</td><td>可自动执行</td><td>仓库路径、Commit、读取范围</td></tr>
+              <tr><td>生成计划与预检</td><td>可自动执行</td><td>发现的问题、依赖、缺失配置</td></tr>
+              <tr><td>创建隔离候选资源</td><td>按预算和 Sandbox Profile 执行</td><td>供应商、资源类型、预计费用、清理方式</td></tr>
+              <tr><td>数据库迁移</td><td>必须单独批准</td><td>迁移版本、备份、锁表与回滚风险</td></tr>
+              <tr><td>正式 DNS 与生产切流</td><td>必须单独批准</td><td>域名、旧目标、新目标、传播与回滚</td></tr>
+              <tr><td>发送真实邮件</td><td>必须单独批准</td><td>收件人范围、模板、数量和发件域名</td></tr>
+              <tr><td>购买或升级付费资源</td><td>必须单独批准</td><td>供应商、价格、周期与取消方式</td></tr>
+              <tr><td>删除资源</td><td>必须单独批准</td><td>准确对象、依赖、备份与不可恢复影响</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout"><strong>审批的单位是具体动作，不是 Agent 身份。</strong>“我信任这个 Agent”不等于“它可以在未来任何时间对任何生产资源执行任何操作”。</div>
+      </section>
+      <section id="evidence">
+        <h2>批准生产变更前，证据至少覆盖这些内容</h2>
+        <ul class="checklist">
+          <li>即将上线的准确 Git Commit 与构建产物摘要。</li>
+          <li>候选环境是否通过真实页面、API 和关键消费者验证。</li>
+          <li>数据库备份能否被识别，迁移版本与回滚命令是否明确。</li>
+          <li>DNS 旧值、新值、TTL、传播检查和恢复目标。</li>
+          <li>第三方费用、配额、资源生命周期和清理责任。</li>
+          <li>本次计划未包含哪些动作，避免用户把局部批准误解为完整上线。</li>
+          <li>中断后如何对账，哪些动作可以安全重试，哪些必须先读取供应商事实。</li>
+        </ul>
+        <p>关于从仓库分析到候选部署的整体过程，请阅读 <a href="/guides/ai-deployment-agent/">AI 部署 Agent 指南</a>。</p>
+      </section>
+      <section id="faq" class="faq">
+        <h2>常见问题</h2>
+        <details><summary>为什么不能用一次授权完成所有部署动作？</summary><p>不同动作的影响、费用和可恢复性不同。创建候选、迁移数据库、改正式 DNS 和发真实邮件不应共享模糊授权。</p></details>
+        <details><summary>审批会不会让自动化失去意义？</summary><p>不会。Agent 仍可自动完成分析、计划、预检、候选部署、证据收集和低风险操作，人工只在高影响决策点介入。</p></details>
+        <details><summary>凭证如何避免进入日志与计划？</summary><p>持久计划只保存 Secret Ref，真实值在执行时由受限解析器取得，不写进 Plan、Run、Receipt 或日志。</p></details>
+      </section>
+      <section><div class="related"><h2>把生产控制权写进部署协议</h2><p>查看 <a href="/">AgentMesh Deploy 产品页</a>中的边界、安装方式和 Control Home 架构。</p></div></section>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>AgentMesh Deploy · Plan, approve, execute, verify</span><div class="footer-links"><a href="/">产品首页</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a><a href="https://agentmesh360.com/">AgentMesh360</a></div></div></footer>
+</body>
+</html>

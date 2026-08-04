@@ -1,0 +1,63 @@
+{
+  "schema": "https://agentmesh360.com/schemas/deploy-manifest.v1.json",
+  "version": 1,
+  "app": {
+    "id": "example-saas",
+    "name": "example-saas",
+    "root": "."
+  },
+  "runtime": {
+    "type": "node",
+    "packageManager": "pnpm",
+    "node": ">=20.0.0",
+    "frameworks": ["tanstack-start", "cloudflare-workers"]
+  },
+  "target": {
+    "provider": "cloudflare",
+    "type": "cloudflare-workers",
+    "environment": "production"
+  },
+  "commands": {
+    "install": "pnpm install",
+    "build": "pnpm run build",
+    "deploy": "pnpm run deploy"
+  },
+  "resources": [
+    {
+      "id": "db",
+      "enabled": true,
+      "type": "cloudflare.d1",
+      "name": "example-saas-db",
+      "binding": "DB"
+    },
+    {
+      "id": "bucket",
+      "enabled": true,
+      "type": "cloudflare.r2",
+      "name": "example-saas-bucket",
+      "binding": "BUCKET"
+    },
+    {
+      "id": "cache",
+      "enabled": true,
+      "type": "cloudflare.kv",
+      "name": "example-saas-cache",
+      "binding": "CACHE"
+    }
+  ],
+  "env": {
+    "required": ["OPENAI_API_KEY"],
+    "generated": ["BETTER_AUTH_SECRET"],
+    "provider": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"],
+    "copyFromShell": ["OPENAI_API_KEY"]
+  },
+  "domain": {
+    "production": "app.example.com"
+  },
+  "github": {
+    "enabled": true,
+    "repo": "example-saas",
+    "visibility": "private",
+    "actionsSecrets": ["OPENAI_API_KEY"]
+  }
+}

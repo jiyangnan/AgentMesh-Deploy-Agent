@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/source-patch-proposal.v1.json",
+  "title": "AgentMesh Deploy Source Patch Proposal V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "id",
+    "fingerprint",
+    "projectId",
+    "sourceRef",
+    "reason",
+    "status",
+    "patch",
+    "requiresRepositoryOwnerApproval",
+    "automaticApplyAllowed",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "SourcePatchProposal" },
+    "id": { "type": "string", "pattern": "^source-patch-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/sha256" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "locator", "commit"],
+      "properties": {
+        "kind": { "enum": ["local-git", "remote-git"] },
+        "locator": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" }
+      }
+    },
+    "reason": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "status": { "const": "proposed" },
+    "patch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "digest",
+        "sizeBytes",
+        "lineCount",
+        "fileCount",
+        "touchedPaths",
+        "riskFlags",
+        "relativePath"
+      ],
+      "properties": {
+        "format": { "const": "unified-diff" },
+        "digest": { "$ref": "#/$defs/sha256" },
+        "sizeBytes": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "lineCount": { "type": "integer", "minimum": 1 },
+        "fileCount": { "type": "integer", "minimum": 1 },
+        "touchedPaths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 4096 }
+        },
+        "riskFlags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "authentication-or-account",
+              "database-or-migration",
+              "dependency-or-lockfile",
+              "deployment-workflow"
+            ]
+          }
+        },
+        "relativePath": {
+          "type": "string",
+          "pattern": "^source-patches/source-patch-[a-f0-9]{24}\\.patch$"
+        }
+      }
+    },
+    "requiresRepositoryOwnerApproval": { "const": true },
+    "automaticApplyAllowed": { "const": false },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  }
+}

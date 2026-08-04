@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/adapter-execution-plan.v1.json",
+  "title": "AgentMesh Deploy Adapter Execution Plan",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId", "graphFingerprint", "actions", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "AdapterExecutionPlan" },
+    "id": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "dnsChangeSetId": { "type": "string", "pattern": "^dns-change-[a-f0-9]{24}$" },
+    "dnsChangeSetFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "migrationPlanId": { "type": "string", "pattern": "^migration-plan-[a-f0-9]{24}$" },
+    "migrationPlanFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "backupEvidenceId": { "type": "string", "pattern": "^backup-evidence-[a-f0-9]{24}$" },
+    "backupEvidenceFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["actionId", "nodeId", "provider", "connectionId", "mode", "input"],
+        "properties": {
+          "actionId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+          "nodeId": { "type": "string", "minLength": 1 },
+          "provider": { "type": "string", "minLength": 1 },
+          "connectionId": { "type": "string", "minLength": 1 },
+          "mode": { "enum": ["call", "plan-execute"] },
+          "method": { "type": "string" },
+          "planMethod": { "type": "string" },
+          "executeMethod": { "type": "string" },
+          "pollMethod": { "type": "string" },
+          "input": { "type": "object" },
+          "pollInput": { "type": "object" },
+          "inputBindings": { "$ref": "#/$defs/bindings" },
+          "pollInputBindings": { "$ref": "#/$defs/bindings" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "createdAt": { "type": "string" }
+  },
+  "dependentRequired": {
+    "configurationId": ["configurationFingerprint"],
+    "configurationFingerprint": ["configurationId"],
+    "dnsChangeSetId": ["dnsChangeSetFingerprint"],
+    "dnsChangeSetFingerprint": ["dnsChangeSetId"],
+    "migrationPlanId": ["migrationPlanFingerprint", "configurationId", "configurationFingerprint"],
+    "migrationPlanFingerprint": ["migrationPlanId", "configurationId", "configurationFingerprint"],
+    "backupEvidenceId": ["backupEvidenceFingerprint", "migrationPlanId", "migrationPlanFingerprint"],
+    "backupEvidenceFingerprint": ["backupEvidenceId", "migrationPlanId", "migrationPlanFingerprint"]
+  },
+  "$defs": {
+    "bindings": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["actionId", "path"],
+        "properties": {
+          "actionId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+          "path": { "type": "string", "pattern": "^data(?:\\.[A-Za-z0-9_-]+)+$" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

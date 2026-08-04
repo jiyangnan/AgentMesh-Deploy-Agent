@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgentMesh Deploy — 경계가 분명한 배포 운영 Agent</title>
+  <meta name="description" content="AgentMesh Deploy는 독립형 오픈소스 배포 운영 Agent입니다. 제품 저장소를 읽고 명시적 승인 후에만 공급자 작업을 실행합니다." />
+  <meta property="og:title" content="AgentMesh Deploy — 독립형 배포 운영 Agent" />
+  <meta property="og:description" content="제품 저장소는 기본적으로 읽기 전용입니다. 계획, 승인, 마이그레이션, DNS, 이메일, 복구 증거는 외부 제어 평면에 보관합니다." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://deploy.agentmesh360.com/ko/" />
+  <meta property="og:image" content="https://deploy.agentmesh360.com/assets/deploy-control-plane.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="theme-color" content="#087a62" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=product-mark-v1" />
+  <link rel="canonical" href="https://deploy.agentmesh360.com/ko/" />
+  <link rel="alternate" hreflang="zh-CN" href="https://deploy.agentmesh360.com/" />
+  <link rel="alternate" hreflang="en" href="https://deploy.agentmesh360.com/en/" />
+  <link rel="alternate" hreflang="ja" href="https://deploy.agentmesh360.com/ja/" />
+  <link rel="alternate" hreflang="ko" href="https://deploy.agentmesh360.com/ko/" />
+  <link rel="alternate" hreflang="x-default" href="https://deploy.agentmesh360.com/" />
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="AgentMesh Deploy LLMs.txt" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script defer src="/assets/site.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"AgentMesh Deploy","url":"https://deploy.agentmesh360.com/","codeRepository":"https://github.com/jiyangnan/AgentMesh-Deploy-Agent","license":"https://www.apache.org/licenses/LICENSE-2.0","applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"0.2.1","isAccessibleForFree":true,"description":"제품 저장소를 읽기 전용으로 분석하고 승인, 배포, 마이그레이션, 검증, 복구를 외부 제어 평면에서 관리하는 독립 운영 Agent."}
+  </script>
+  <script defer src="https://analytics.agentmesh360.com/script.js" data-website-id="dde37bb1-f07e-4a10-a349-719b4149923b" data-domains="deploy.agentmesh360.com"></script>
+</head>
+<body data-product-contract="independent-deploy-agent-v1" data-release="v0.2.1">
+  <header class="nav"><div class="nav-inner">
+    <a class="brand" href="#top" aria-label="AgentMesh Deploy"><span class="brand-mark" aria-hidden="true"></span>AgentMesh Deploy <small>· AgentMesh360</small></a>
+    <nav class="nav-links" aria-label="기본 탐색"><a class="nav-section" href="#capabilities">기능</a><a class="nav-section" href="#boundary">경계</a><a class="nav-section" href="#workflow">절차</a><a class="nav-section" href="#faq">FAQ</a><span class="langs" aria-label="언어"><a href="/">中</a><a href="/en/">EN</a><a href="/ja/">日</a><a aria-current="page">한</a></span><a class="nav-cta" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a></nav>
+  </div></header>
+
+  <main id="top">
+    <section class="hero"><div class="wrap"><div class="hero-copy">
+      <div class="eyebrow">Open source · Independent operations agent</div>
+      <h1>AgentMesh Deploy<span class="hero-line">제품 출시를, 경계가 분명한 운영 Agent에게.</span></h1>
+      <p class="lede">개발을 마친 Git 저장소를 넘기면 Commit을 고정하고 기술 스택과 공급자 전략을 분석해 실행 계획을 제시합니다. 비용, 데이터베이스 마이그레이션, DNS, 프로덕션 전환은 사용자가 승인하기 전에는 실행하지 않습니다. 제품 저장소는 기본적으로 읽기 전용입니다.</p>
+      <div class="hero-actions"><a class="btn btn-secondary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub 보기 →</a><a class="btn btn-secondary" href="#install">v0.2.1 설치</a><a class="btn btn-primary" data-purchase-cta href="https://agentmesh360.com/app/#pricing">AgentMesh360 패스 구매</a></div>
+      <p class="pass-note"><strong>AgentMesh Deploy 자체는 무료 오픈소스이며 패스가 필요하지 않습니다.</strong>이 링크는 Lecturecast, CreatorCut 같은 AgentMesh360 클라우드 제품에서 공유하는 패스를 구매하는 용도입니다.</p>
+      <ul class="proof" aria-label="릴리스 정보"><li>Apache 2.0</li><li>Node.js 20+</li><li>버전 관리 계약</li><li>GitHub Release v0.2.1</li></ul>
+      <div class="agent-handoff" data-agent-handoff>
+        <div class="agent-handoff-top"><span class="agent-handoff-label">Agent에게 붙여넣기 · 운영 인계</span><button class="copy-agent-prompt" type="button" data-copy-prompt data-copied-label="복사됨" data-failed-label="복사 실패" aria-label="AgentMesh Deploy 운영 인계 지시 복사">지시 복사</button></div>
+        <pre data-agent-prompt>https://github.com/jiyangnan/AgentMesh-Deploy-Agent 를 읽고 AgentMesh Deploy 최신 안정 버전을 설치한 뒤, 독립 운영 Agent로서 이 제품의 출시를 인계하세요.
+
+먼저 저장소를 읽기 전용으로 분석하고 현재 Git Commit을 고정하세요. 제품 저장소의 Remote, Index, 작업 트리, 기록이나 기존 인증, 계정, 권한, 세션 체계를 수정하지 마세요.
+
+권장 공급자 경로, 예산, 필요한 자격 증명, DB 마이그레이션, DNS / Resend, 롤백 계획을 제출하세요. 비용, 공급자 Mutation, DB 쓰기, DNS 변경, 실제 메일, 프로덕션 전환, 삭제 전에는 반드시 나의 명시적 승인을 요청하세요.</pre>
+      </div>
+    </div></div></section>
+
+    <section class="band band-white"><div class="wrap section-head"><div><div class="kicker">필요한 이유</div><h2>개발 완료가 곧 출시 완료는 아닙니다.</h2></div><p class="section-copy">도메인, 서버, 데이터베이스, 이메일, 환경 변수, CI/CD, 마이그레이션, 상태 확인, 롤백은 여러 공급자 화면에 흩어져 있습니다. AgentMesh Deploy는 이를 <strong>검토하고 승인하고 복구할 수 있는</strong> 하나의 출시 흐름으로 만듭니다.</p></div></section>
+
+    <section class="band" id="architecture"><div class="wrap"><div class="section-head"><div><div class="kicker">독립 제어 평면</div><h2>하나의 Deploy Agent가 여러 제품을 담당합니다.</h2></div><p class="section-copy">제품 저장소에 Sidecar를 쓰지 않습니다. 고정된 Commit에서 격리 Checkout을 만들고 Manifest, Plan, Approval, Evidence, Run을 외부 Control Home에 저장합니다. 코드 변경이 필요하면 Patch 제안만 생성합니다.</p></div><img class="architecture" src="/assets/deploy-control-plane.png" width="1600" height="900" alt="여러 읽기 전용 제품 저장소를 AgentMesh Deploy와 외부 제어 평면이 공급자에 연결하는 구조" /><p class="caption">제품 저장소는 읽기 전용 입력이며 공급자 변경은 계획, 승인, 증거 단계를 거칩니다.</p></div></section>
+
+    <section class="band band-white" id="capabilities"><div class="wrap"><div class="section-head"><div><div class="kicker">핵심 기능</div><h2>코드 스냅샷에서 검증된 온라인 결과까지.</h2></div><p class="section-copy">모든 단계를 같은 Commit, Graph, 계획 지문에 연결합니다. 실패 시 공급자 사실을 먼저 대조한 뒤 Resume 또는 사람에게 인계를 선택합니다.</p></div><div class="capabilities">
+      <article class="capability"><span class="cap-num">01 / SOURCE</span><h3>읽기 전용 분석</h3><p>격리 Checkout에서 프레임워크, 빌드, 환경 요구사항을 식별하며 작업 트리, Remote, 기록을 변경하지 않습니다.</p></article>
+      <article class="capability"><span class="cap-num">02 / PLAN</span><h3>결정적 공급자 계획</h3><p>Launch Configuration으로 런타임, 데이터베이스, DNS, 이메일 Adapter Plan을 생성합니다.</p></article>
+      <article class="capability"><span class="cap-num">03 / APPROVAL</span><h3>권한과 예산 게이트</h3><p>네트워크, Mutation, 비용, 마이그레이션, 프로덕션 전환을 따로 승인합니다. 정확한 Approval이 없으면 API 호출 전에 멈춥니다.</p></article>
+      <article class="capability"><span class="cap-num">04 / DATABASE</span><h3>마이그레이션 전 증거</h3><p>Schema와 SQL 위험을 확인하고 Snapshot 또는 Backup Evidence를 만든 뒤 대상 버전 마이그레이션을 실행합니다.</p></article>
+      <article class="capability"><span class="cap-num">05 / EDGE</span><h3>DNS와 이메일</h3><p>정확한 DNS Change Set으로 사이트와 Resend 도메인을 구성하며 모호한 조건으로 기존 레코드를 덮어쓰지 않습니다.</p></article>
+      <article class="capability"><span class="cap-num">06 / RECOVERY</span><h3>중단 후 복구</h3><p>Intent를 먼저, Receipt를 나중에 기록합니다. 재개 시 이미 생성된 리소스를 대조해 중복 생성과 비용을 막습니다.</p></article>
+    </div></div></section>
+
+    <section class="band"><div class="wrap"><div class="section-head"><div><div class="kicker">공급자 어댑터</div><h2>하나의 흐름으로 핵심 여섯 공급자를 연결합니다.</h2></div><p class="section-copy">v0.2.1은 여섯 핵심 Adapter 계약을 공개합니다. 자격 증명은 Secret Ref로만 사용하며 Token과 연결 문자열은 Plan, Run, State, 로그에 저장하지 않습니다.</p></div><div class="providers" aria-label="지원 공급자"><div class="provider"><strong>Vercel</strong><span>Frontend / Preview</span></div><div class="provider"><strong>Railway</strong><span>Runtime / Service</span></div><div class="provider"><strong>Neon</strong><span>Postgres / Branch</span></div><div class="provider"><strong>Supabase</strong><span>Backend / Database</span></div><div class="provider"><strong>Cloudflare</strong><span>DNS / Edge</span></div><div class="provider"><strong>Resend</strong><span>Email / Domain</span></div></div></div></section>
+
+    <section class="band band-white" id="boundary"><div class="wrap"><div class="section-head"><div><div class="kicker">사람과 Agent의 경계</div><h2>Agent가 흐름을 실행하고 사람이 최종 권한을 가집니다.</h2></div><p class="section-copy">사람은 책임이 필요한 결정에 집중하고 반복적이며 오류가 잦은 여러 플랫폼 작업은 Agent가 수행합니다.</p></div><div class="boundary">
+      <div class="boundary-row"><div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent 자동 수행</span><h3>발견과 계획</h3><p>저장소를 분석하고 아키텍처 선택지, 예상 리소스, 변경 횟수를 제시합니다.</p></div><div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">사람이 확인</span><h3>계정과 자격 증명</h3><p>가입, 신원 확인, 결제, 최소 권한 Token 생성과 Secret Backend 사용을 결정합니다.</p></div></div>
+      <div class="boundary-row"><div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent 자동 수행</span><h3>후보 환경과 검증</h3><p>격리 프로젝트를 만들고 고정 Commit을 배포해 HTTPS, API, DB, 이메일 상태를 확인합니다.</p></div><div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">사람이 확인</span><h3>비용과 데이터 위험</h3><p>유료 요금제, 도메인 구매, 마이그레이션, 복구, 기존 데이터에 영향을 줄 수 있는 작업을 승인합니다.</p></div></div>
+      <div class="boundary-row"><div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent 자동 수행</span><h3>증거와 Resume</h3><p>불변 Receipt, 드리프트 감지, 불확실한 쓰기 대조, 정확한 복구 절차를 남깁니다.</p></div><div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">사람이 확인</span><h3>프로덕션 전환과 삭제</h3><p>공식 DNS, 실제 이메일 발송, 프로덕션 트래픽, 리소스 삭제, 파괴적 DB 작업을 승인합니다.</p></div></div>
+    </div></div></section>
+
+    <section class="band" id="workflow"><div class="wrap"><div class="section-head"><div><div class="kicker">첫 출시 흐름</div><h2>개발 Agent에서 운영 Agent로 인계합니다.</h2></div><p class="section-copy">CLI는 구조화된 <code>nextActions</code>를 반환합니다. 다음 Agent는 여섯 관리 화면에서 다음 단계를 추측할 필요가 없습니다.</p></div><div class="steps"><div class="step"><span class="step-num">01</span><h3>제품 등록</h3><p>로컬 또는 원격 Git을 제공하고 변경 불가능한 Commit을 고정합니다.</p></div><div class="step"><span class="step-num">02</span><h3>분석과 전략 선택</h3><p>기술 요구사항을 식별하고 사람이 공급자 구성과 예산을 확인합니다.</p></div><div class="step"><span class="step-num">03</span><h3>제한된 자격 증명</h3><p>최소 권한 Token을 Keychain, 1Password 등에 저장하고 참조만 등록합니다.</p></div><div class="step"><span class="step-num">04</span><h3>후보 환경 배포</h3><p>Sandbox, Approval, Preflight 후 격리 리소스를 만들고 검증합니다.</p></div><div class="step"><span class="step-num">05</span><h3>프로덕션 전환 승인</h3><p>DB, DNS, 이메일, 복구 증거를 확인하고 명시적 승인 후에만 변경합니다.</p></div></div>
+      <div class="terminal" id="install" aria-label="설치 예시"><div class="terminal-top">agentmesh-deploy · GitHub Release install</div><pre><span class="prompt">$</span> gh release download v0.2.1 --repo jiyangnan/AgentMesh-Deploy-Agent --pattern 'agentmesh-deploy-*.tgz'
+<span class="prompt">$</span> npm install --global ./agentmesh-deploy-0.2.1.tgz
+<span class="prompt">$</span> agentmesh-deploy version
+<span class="success">0.2.1</span>
+
+<span class="prompt">$</span> agentmesh-deploy project add --repo /path/to/product --id my-saas --name "My SaaS" --json
+<span class="prompt">$</span> agentmesh-deploy analyze my-saas --json
+<span class="output">nextActions → review configuration → connect providers → sandbox preflight</span></pre></div>
+    </div></section>
+
+    <section class="band band-white" id="faq"><div class="wrap"><div class="kicker">자주 묻는 질문</div><h2>FAQ.</h2><div class="faq">
+      <details><summary>제품 저장소에 파일을 쓰나요?</summary><div class="faq-answer">V2는 기본적으로 쓰지 않습니다. 상태는 외부 Control Home에 저장하며 코드 변경이 필요하면 독립된 Patch 제안만 만듭니다.</div></details>
+      <details><summary>AgentMesh360 계정이 필요한가요?</summary><div class="faq-answer">필요하지 않습니다. Apache 2.0 오픈소스 CLI입니다. 대상 공급자 계정과 최소 권한 자격 증명은 필요합니다.</div></details>
+      <details><summary>도메인 구매나 프로덕션 전환도 자동인가요?</summary><div class="faq-answer">계획과 안내는 가능하지만 기본 실행하지 않습니다. 구매, 비용, DB 위험, 공식 DNS, 이메일 발송, 프로덕션 전환, 삭제에는 별도 승인이 필요합니다.</div></details>
+      <details><summary>자격 증명은 어디에 저장하나요?</summary><div class="faq-answer">영구 객체에는 <code>keychain://</code>, <code>op://</code>, <code>secret://</code> 같은 Secret Ref만 저장합니다.</div></details>
+      <details><summary>중단되면 리소스가 중복 생성되나요?</summary><div class="faq-answer">Mutation은 Intent 이후 Receipt를 기록합니다. Resume은 공급자 사실을 먼저 대조하고 리소스 부재와 예산을 확인한 뒤 다시 실행합니다.</div></details>
+    </div></div></section>
+
+    <section class="band closing"><div class="wrap section-head"><div><div class="kicker">인계 시작</div><h2>다음 제품 개발이 끝나면 출시를 Deploy Agent에게 맡기세요.</h2></div><div><p class="section-copy">공개 저장소의 설치와 Agent 안내에서 시작하고, 먼저 테스트 프로젝트에서 읽기 전용 분석과 Sandbox를 실행하세요.</p><div class="hero-actions"><a class="btn btn-primary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub 열기 →</a><a class="btn btn-secondary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/releases/tag/v0.2.1">v0.2.1 Release</a></div></div></div></section>
+  </main>
+
+  <footer class="foot"><div class="wrap foot-inner"><div><div class="brand"><span class="brand-mark" aria-hidden="true"></span>AgentMesh Deploy <small>· AgentMesh360</small></div><div>독립적이고 감사 가능하며 최종 권한은 사람에게.</div><div class="machine-note">이 번역은 기계 지원으로 작성되었습니다.</div></div><div class="foot-links"><a href="https://agentmesh360.com">AgentMesh360</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/releases">Releases</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/blob/main/LICENSE">Apache 2.0</a><span>© 2026</span></div></div></footer>
+</body>
+</html>

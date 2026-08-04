@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/database-migration-plan.v1.json",
+  "title": "AgentMesh Deploy Database Migration Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId", "graphFingerprint", "configurationId", "configurationFingerprint", "provider", "dialect", "sourceRef", "expectedSchemaVersion", "migrations", "summary", "requirements", "status", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "DatabaseMigrationPlan" },
+    "id": { "type": "string", "pattern": "^migration-plan-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "provider": { "enum": ["neon", "supabase", "railway", "cloudflare"] },
+    "dialect": { "const": "postgresql" },
+    "sourceRef": { "$ref": "#/$defs/sourceRef" },
+    "expectedSchemaVersion": { "type": "string", "pattern": "^[A-Za-z0-9._-]{1,64}$" },
+    "migrations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/migration" }
+    },
+    "summary": { "$ref": "#/$defs/summary" },
+    "requirements": { "$ref": "#/$defs/requirements" },
+    "status": { "enum": ["ready", "needs-approval", "blocked"] },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "commit"],
+      "properties": {
+        "kind": { "enum": ["local-git", "remote-git"] },
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "size", "sha256", "blobId"],
+      "properties": {
+        "path": { "type": "string", "minLength": 5, "maxLength": 512, "pattern": "^[^\\\\].*\\.sql$" },
+        "size": { "type": "integer", "minimum": 1, "maximum": 2097152 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "blobId": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" }
+      }
+    },
+    "statement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "sha256", "classification", "operation", "objectType", "objectName", "transactionSafe", "blockers", "warnings"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "classification": { "enum": ["additive", "reversible", "destructive", "unknown"] },
+        "operation": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "objectType": { "type": "string", "maxLength": 64 },
+        "objectName": { "type": "string", "maxLength": 63 },
+        "transactionSafe": { "type": "boolean" },
+        "blockers": { "type": "array", "items": { "type": "string", "maxLength": 128 }, "uniqueItems": true },
+        "warnings": { "type": "array", "items": { "type": "string", "maxLength": 128 }, "uniqueItems": true }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "transactionMode", "statementCount", "statements"],
+      "properties": {
+        "classification": { "enum": ["additive", "reversible", "destructive", "unknown"] },
+        "transactionMode": { "enum": ["transactional", "non-transactional", "mixed"] },
+        "statementCount": { "type": "integer", "minimum": 1 },
+        "statements": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/statement" } }
+      }
+    },
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "order", "up", "classification", "transactionMode", "statements", "blockers", "warnings"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^migration-[0-9]{3}-[a-f0-9]{12}$" },
+        "order": { "type": "integer", "minimum": 1 },
+        "up": { "$ref": "#/$defs/file" },
+        "down": { "$ref": "#/$defs/file" },
+        "classification": { "enum": ["additive", "reversible", "destructive", "unknown"] },
+        "transactionMode": { "enum": ["transactional", "non-transactional", "mixed"] },
+        "statements": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/statement" } },
+        "downAnalysis": { "$ref": "#/$defs/analysis" },
+        "blockers": { "type": "array", "items": { "type": "string", "maxLength": 128 }, "uniqueItems": true },
+        "warnings": { "type": "array", "items": { "type": "string", "maxLength": 128 }, "uniqueItems": true }
+      },
+      "dependentRequired": {
+        "down": ["downAnalysis"],
+        "downAnalysis": ["down"]
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["migrationCount", "statementCount", "classification", "classificationCounts"],
+      "properties": {
+        "migrationCount": { "type": "integer", "minimum": 1 },
+        "statementCount": { "type": "integer", "minimum": 1 },
+        "classification": { "enum": ["additive", "reversible", "destructive", "unknown"] },
+        "classificationCounts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["additive", "reversible", "destructive", "unknown"],
+          "properties": {
+            "additive": { "type": "integer", "minimum": 0 },
+            "reversible": { "type": "integer", "minimum": 0 },
+            "destructive": { "type": "integer", "minimum": 0 },
+            "unknown": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backupRequired", "approvalRequired", "manualReviewRequired", "downPlanRequired", "blockers"],
+      "properties": {
+        "backupRequired": { "type": "boolean" },
+        "approvalRequired": { "type": "boolean" },
+        "manualReviewRequired": { "type": "boolean" },
+        "downPlanRequired": { "type": "boolean" },
+        "blockers": { "type": "array", "items": { "type": "string", "maxLength": 128 }, "uniqueItems": true }
+      }
+    }
+  }
+}

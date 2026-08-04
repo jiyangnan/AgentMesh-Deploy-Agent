@@ -1,0 +1,6 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "agentmesh-minimal-worker",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-07-06"
+}

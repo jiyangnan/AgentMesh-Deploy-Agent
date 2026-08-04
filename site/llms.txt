@@ -1,0 +1,64 @@
+# AgentMesh Deploy
+
+> AgentMesh Deploy is an independent, open-source deployment operations agent and CLI for handing completed product repositories to an operations agent without coupling deployment state into those repositories.
+
+Official website: https://deploy.agentmesh360.com/
+Source repository: https://github.com/jiyangnan/AgentMesh-Deploy-Agent
+Current release: v0.2.1
+License: Apache-2.0
+Runtime: Node.js 20+
+
+## Best Fit
+
+- Developers, independent builders, and small teams with a completed Git
+  repository that still needs hosting, database, DNS, email, verification, and
+  rollback work.
+- Teams that want an AI operations agent to run repetitive provider workflows
+  while humans retain approval over cost, data risk, credentials, email,
+  production DNS, cutover, and deletion.
+- Multi-product operators that need deployment state outside product
+  repositories.
+
+## Product contract
+
+- Product repositories are read-only sources by default.
+- AgentMesh Deploy locks an immutable Git commit and analyzes it in an isolated checkout.
+- Manifests, plans, approvals, evidence, runs, intent, receipts, and recovery state live in an external Control Home.
+- Code changes are proposed as patches; they are not silently written into product repositories.
+- Provider mutations require exact, current approvals and must remain inside the approved provider, project, resource, budget, operation, and mutation-count scope.
+- Paid upgrades, domain purchases, database migrations and restores, production DNS, real email delivery, production cutover, deletion, and destructive operations remain human-authorized actions.
+- Secret values never belong in plans, state, receipts, logs, or this website. Persistent objects store only Secret Refs.
+- Interrupted mutations are reconciled against provider facts before resume; the system does not blindly replay writes.
+
+## Core provider adapters
+
+- Vercel: frontend and preview deployment planning
+- Railway: runtime project, environment, service, and deployment planning
+- Neon: PostgreSQL project, branch, snapshot, and migration planning
+- Supabase: backend and database planning
+- Cloudflare: exact DNS change-set planning
+- Resend: email-domain and verification planning
+
+The existence of an adapter contract does not mean every provider operation is automatically authorized or accepted for production use. Provider capabilities, account plans, current credentials, preflight evidence, and explicit approval determine what can run.
+
+## First-launch sequence
+
+1. Register a local or remote Git repository and lock its commit.
+2. Analyze the product and review architecture, provider, and budget options.
+3. Create minimum-scope provider credentials and store them in a supported secret backend.
+4. Generate launch configuration, graph, adapter plans, sandbox profile, approval, and preflight evidence.
+5. Deploy and verify an isolated candidate environment.
+6. Review database, DNS, email, recovery, and production evidence.
+7. Execute production cutover only after exact human authorization.
+
+## Languages
+
+- Chinese: https://deploy.agentmesh360.com/
+- English: https://deploy.agentmesh360.com/en/
+- Japanese: https://deploy.agentmesh360.com/ja/
+- Korean: https://deploy.agentmesh360.com/ko/
+
+## Further Reading
+
+- AI deployment agent workflow: https://deploy.agentmesh360.com/guides/ai-deployment-agent/
+- Approval-gated DevOps: https://deploy.agentmesh360.com/guides/approval-gated-devops/

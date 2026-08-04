@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/sandbox-execution-profile.v1.json",
+  "title": "AgentMesh Deploy Sandbox Execution Profile",
+  "type": "object",
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId", "graphFingerprint",
+    "adapterPlanId", "adapterPlanFingerprint", "providers", "connectionIds", "resourcePrefix",
+    "allowedDomains", "apiHosts", "allowPaidResources", "estimatedProviderMutations",
+    "maxProviderMutations", "createdAt", "expiresAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "SandboxExecutionProfile" },
+    "id": { "type": "string", "pattern": "^sandbox-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "adapterPlanId": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+    "adapterPlanFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "providers": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "connectionIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "resourcePrefix": { "type": "string", "pattern": "^[a-z][a-z0-9-]{2,31}$" },
+    "allowedDomains": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "protectedDomains": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "apiHosts": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "accountEnvironment": { "const": "test" },
+    "allowPaidResources": { "type": "boolean" },
+    "estimatedProviderMutations": { "type": "integer", "minimum": 0 },
+    "maxProviderMutations": { "type": "integer", "minimum": 0 },
+    "createdAt": { "type": "string" },
+    "expiresAt": { "type": "string" }
+  },
+  "additionalProperties": false
+}

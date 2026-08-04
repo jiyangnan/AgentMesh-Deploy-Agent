@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/dns-change-set.v1.json",
+  "title": "AgentMesh Deploy DNS Change Set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "id",
+    "fingerprint",
+    "projectId",
+    "graphId",
+    "graphFingerprint",
+    "configurationId",
+    "configurationFingerprint",
+    "zoneName",
+    "records",
+    "sourceEvidence",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "DnsChangeSet" },
+    "id": { "type": "string", "pattern": "^dns-change-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "scope": { "enum": ["production-cutover", "provider-acceptance"] },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "zoneName": {
+      "type": "string",
+      "maxLength": 253,
+      "pattern": "^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$"
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/record" }
+    },
+    "sourceEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "purpose", "type", "name", "content", "ttl", "proxied", "priority", "updatePolicy"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+        "purpose": { "enum": ["web", "email"] },
+        "type": { "enum": ["A", "AAAA", "CNAME", "TXT", "MX"] },
+        "name": {
+          "type": "string",
+          "maxLength": 253,
+          "pattern": "^(?=.{1,253}$)(?:[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?\\.)+[a-z]{2,63}$"
+        },
+        "content": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "ttl": { "type": "integer", "minimum": 1 },
+        "proxied": { "type": "boolean" },
+        "priority": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 0, "maximum": 65535 }
+          ]
+        },
+        "updatePolicy": { "enum": ["create-only", "replace-exact-record-set"] }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "resultRef"],
+      "properties": {
+        "nodeId": { "enum": ["candidate.deploy", "candidate.verify", "email.domain.create"] },
+        "resultRef": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

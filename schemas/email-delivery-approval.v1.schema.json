@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/email-delivery-approval.v1.json",
+  "title": "AgentMesh Deploy Email Delivery Approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId",
+    "graphFingerprint", "emailDeliveryPlanId", "emailDeliveryPlanFingerprint",
+    "decision", "limits", "approvedBy", "approvedAt", "expiresAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "EmailDeliveryApproval" },
+    "id": { "type": "string", "pattern": "^email-delivery-approval-[a-f0-9-]{36}$" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "emailDeliveryPlanId": { "type": "string", "pattern": "^email-delivery-plan-[a-f0-9]{24}$" },
+    "emailDeliveryPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "decision": { "const": "approved" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxEmails", "maxRecipients"],
+      "properties": {
+        "maxEmails": { "const": 1 },
+        "maxRecipients": { "const": 1 }
+      }
+    },
+    "approvedBy": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "approvedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/provider-bootstrap-plan.v1.json",
+  "title": "AgentMesh Deploy Provider Bootstrap Plan",
+  "type": "object",
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "sourceRef", "recipeRef",
+    "secretBackend", "status", "sequence", "providers", "safety", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "ProviderBootstrapPlan" },
+    "id": { "type": "string", "pattern": "^bootstrap-plan-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62})$" },
+    "sourceRef": { "$ref": "#/$defs/sourceRef" },
+    "recipeRef": { "$ref": "#/$defs/recipeRef" },
+    "secretBackend": { "enum": ["env", "keychain"] },
+    "status": { "const": "waiting-human" },
+    "sequence": {
+      "type": "array",
+      "minItems": 5,
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/provider" }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["providerMutationsAllowed", "providerProbesAllowed", "secretValuesAllowed", "productRepositoryWritesAllowed"],
+      "properties": {
+        "providerMutationsAllowed": { "const": false },
+        "providerProbesAllowed": { "const": false },
+        "secretValuesAllowed": { "const": false },
+        "productRepositoryWritesAllowed": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "required": ["kind", "locator", "commit"],
+      "properties": {
+        "kind": { "enum": ["local-git", "remote-git"] },
+        "locator": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[a-fA-F0-9]{40,64}$" }
+      },
+      "additionalProperties": false
+    },
+    "recipeRef": {
+      "type": "object",
+      "required": ["id", "fingerprint"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^recipe-[a-f0-9]{24}$" },
+        "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "credentialOption": {
+      "type": "object",
+      "required": ["id", "env", "scope", "selected"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "env": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "scope": { "type": "string", "minLength": 1 },
+        "selected": { "type": "boolean" },
+        "useFor": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "preferredForHosted": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "secretRef": {
+      "type": "object",
+      "required": ["env", "ref", "purpose", "source", "provisioningMethod", "captureArgv", "requiresStdin"],
+      "properties": {
+        "env": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "ref": { "type": "string", "pattern": "^(?:env|keychain)://[A-Za-z0-9._/-]+$" },
+        "purpose": { "enum": ["credential", "context"] },
+        "source": { "type": "string", "minLength": 1 },
+        "provisioningMethod": { "enum": ["external-environment", "native-cli-stdin"] },
+        "captureArgv": { "type": "array", "items": { "type": "string" } },
+        "requiresStdin": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "command": {
+      "type": "object",
+      "required": ["argv", "networkAllowed", "providerMutationAllowed"],
+      "properties": {
+        "argv": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "networkAllowed": { "type": "boolean" },
+        "providerMutationAllowed": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "provider": {
+      "type": "object",
+      "required": [
+        "providerId", "name", "roles", "interfaces", "connectionId", "credentialMode",
+        "credentialOptions", "requiredSecretRefs", "deferredContext", "bootstrapSteps", "humanOnly",
+        "docs", "commands"
+      ],
+      "properties": {
+        "providerId": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "roles": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+        "interfaces": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+        "connectionId": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62})$" },
+        "credentialMode": { "enum": ["one", "all"] },
+        "credentialOptions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/credentialOption" } },
+        "requiredSecretRefs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/secretRef" } },
+        "deferredContext": { "type": "array", "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" }, "uniqueItems": true },
+        "bootstrapSteps": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "humanOnly": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+        "docs": { "type": "array", "minItems": 1, "items": { "type": "string", "format": "uri" }, "uniqueItems": true },
+        "commands": {
+          "type": "object",
+          "required": ["add", "check", "probe"],
+          "properties": {
+            "add": { "$ref": "#/$defs/command" },
+            "check": { "$ref": "#/$defs/command" },
+            "probe": { "$ref": "#/$defs/command" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

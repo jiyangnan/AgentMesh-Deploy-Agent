@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/rollback-plan.v1.json",
+  "title": "AgentMesh Deploy Rollback Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId",
+    "graphFingerprint", "configurationId", "configurationFingerprint", "trigger",
+    "dns", "release", "database", "steps", "status", "blockers", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "RollbackPlan" },
+    "id": { "type": "string", "pattern": "^rollback-plan-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "trigger": { "$ref": "#/$defs/trigger" },
+    "dns": { "$ref": "#/$defs/dns" },
+    "release": { "$ref": "#/$defs/release" },
+    "database": { "$ref": "#/$defs/database" },
+    "steps": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/step" }
+    },
+    "status": { "enum": ["ready", "partially-ready", "blocked"] },
+    "blockers": {
+      "type": "array",
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/blocker" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId", "verificationPlanId", "verificationPlanFingerprint", "evidenceId",
+        "evidenceFingerprint", "status", "targetUrl"
+      ],
+      "properties": {
+        "nodeId": { "const": "product.verify" },
+        "verificationPlanId": { "type": "string", "pattern": "^verification-plan-[a-f0-9]{24}$" },
+        "verificationPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+        "evidenceId": { "type": "string", "pattern": "^product-verification-[a-f0-9]{24}$" },
+        "evidenceFingerprint": { "$ref": "#/$defs/fingerprint" },
+        "status": { "const": "failed" },
+        "targetUrl": { "type": "string", "pattern": "^https://" }
+      }
+    },
+    "dns": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider", "connectionId", "strategy", "zoneId", "changeSetId", "changeSetFingerprint",
+        "applyReceipt", "desiredRecord", "appliedRecord", "beforeRecords"
+      ],
+      "properties": {
+        "provider": { "const": "cloudflare" },
+        "connectionId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,62}$" },
+        "strategy": { "enum": ["restore-exact", "manual-remove-new-record", "no-change"] },
+        "zoneId": { "type": "string", "minLength": 1 },
+        "changeSetId": { "type": "string", "pattern": "^dns-change-[a-f0-9]{24}$" },
+        "changeSetFingerprint": { "$ref": "#/$defs/fingerprint" },
+        "applyReceipt": { "$ref": "#/$defs/receiptRef" },
+        "desiredRecord": { "$ref": "#/$defs/record" },
+        "appliedRecord": { "$ref": "#/$defs/appliedRecord" },
+        "beforeRecords": {
+          "type": "array",
+          "maxItems": 1,
+          "items": { "$ref": "#/$defs/record" }
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "candidateResultRef"],
+      "properties": {
+        "strategy": { "const": "retain-candidate-and-restore-route" },
+        "candidateResultRef": { "type": "string", "minLength": 1, "maxLength": 1024 }
+      }
+    },
+    "database": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required", "provider", "strategy", "migrationPlanId", "migrationPlanFingerprint",
+        "backupEvidenceId", "backupEvidenceFingerprint"
+      ],
+      "properties": {
+        "required": { "type": "boolean" },
+        "provider": { "type": "string", "maxLength": 32 },
+        "strategy": { "enum": ["not-required", "retain-additive", "apply-down", "restore-backup", "manual-review"] },
+        "migrationPlanId": { "type": "string", "maxLength": 64 },
+        "migrationPlanFingerprint": { "type": "string", "maxLength": 71 },
+        "backupEvidenceId": { "type": "string", "maxLength": 64 },
+        "backupEvidenceFingerprint": { "type": "string", "maxLength": 71 }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "risk", "status", "dependsOn", "approval"],
+      "properties": {
+        "id": { "enum": ["dns.restore", "release.retain", "database.rollback", "verification.repeat"] },
+        "operation": { "enum": ["restore", "retain", "apply-down", "restore-backup", "verify"] },
+        "risk": { "enum": ["read-only", "provider-mutation", "destructive"] },
+        "status": { "enum": ["ready", "blocked", "not-required"] },
+        "dependsOn": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "approval": { "type": ["string", "null"], "enum": ["rollback-dns", "rollback-database", null] }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "scope", "message"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{0,63}$" },
+        "scope": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+        "message": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    },
+    "receiptRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runId", "actionId", "sequence", "fingerprint"],
+      "properties": {
+        "runId": { "type": "string", "minLength": 1 },
+        "actionId": { "const": "cloudflare-dns-change-set" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "fingerprint": { "$ref": "#/$defs/fingerprint" }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "name", "content", "ttl", "proxied", "priority"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "enum": ["A", "AAAA", "CNAME", "TXT", "MX"] },
+        "name": { "type": "string", "minLength": 1 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "ttl": { "type": "integer", "minimum": 1 },
+        "proxied": { "type": "boolean" },
+        "priority": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "appliedRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["desiredId", "mode", "record"],
+      "properties": {
+        "desiredId": { "type": "string", "minLength": 1 },
+        "mode": { "enum": ["unchanged", "create", "update"] },
+        "record": { "$ref": "#/$defs/record" }
+      }
+    }
+  }
+}

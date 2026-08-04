@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/launch-graph.v1.json",
+  "title": "AgentMesh Deploy Launch Graph",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "projectId", "appId", "fingerprint", "sourceRef", "nodes", "summary"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "LaunchGraph" },
+    "id": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "appId": { "type": "string", "minLength": 1 },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "createdAt": { "type": "string" },
+    "sourceRef": { "type": "object" },
+    "sourcePlanFingerprint": { "type": "string" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "operation", "resourceType", "dependsOn", "sideEffect", "status", "retryPolicy", "evidence"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "operation": { "type": "string", "minLength": 1 },
+          "resourceType": { "type": "string", "minLength": 1 },
+          "provider": { "type": "string" },
+          "dependsOn": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+          "sideEffect": { "enum": ["read-only", "local-control-write", "provider-mutation", "cost-mutation", "destructive"] },
+          "approval": { "type": ["string", "null"] },
+          "status": { "enum": ["planned", "ready", "running", "waiting-external", "needs-approval", "blocked", "succeeded", "failed-retryable", "failed-terminal", "compensating", "compensated", "skipped"] },
+          "retryPolicy": { "type": "string" },
+          "rollbackNodeId": { "type": ["string", "null"] },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "sourceStep": { "type": "object" },
+          "requiresReverification": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "summary": { "type": "object" },
+    "migration": { "type": "object" }
+  },
+  "additionalProperties": false
+}

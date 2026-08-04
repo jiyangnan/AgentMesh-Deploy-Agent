@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/first-launch-session-revision.v1.json",
+  "title": "AgentMesh Deploy First Launch Session Revision V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "sessionId", "sessionFingerprint",
+    "projectId", "sourceCommit", "revision", "previousFingerprint", "checkpoint",
+    "configurationRecipeRef", "configurationHandoffRef", "configurationAttestationRef",
+    "manifestRef", "artifactRef", "graphRef", "launchConfigurationRef", "adapterPlanRef",
+    "sandboxProfileRefs", "candidateApprovalRefs", "sandboxPreflightRefs", "candidateRunRefs",
+    "migrationPlanRef", "databaseInspectPlanRef", "databaseInspectProfileRefs",
+    "databaseInspectApprovalRefs", "databaseInspectPreflightRefs", "databaseInspectRunRefs",
+    "backupEvidenceRef", "databaseApplyPlanRef", "databaseRuntimeProfileRefs",
+    "databaseApplyProfileRefs", "databaseApplyApprovalRefs", "databaseApplyPreflightRefs",
+    "databaseApplyRunRefs",
+    "verificationPlanRef", "candidateEvidenceRef", "cutoverHandoffRef", "cutoverAttestationRef",
+    "dnsChangeSetRef", "cutoverPlanRef", "cutoverProfileRefs", "cutoverApprovalRefs",
+    "cutoverPreflightRefs", "cutoverRunRefs", "emailDeliveryPlanRef",
+    "emailDeliveryApprovalRefs", "emailDeliveryRunRefs", "productionVerificationRefs",
+    "productionEvidenceRef", "rollbackPlanRef", "rollbackApprovalRefs", "rollbackRunRefs",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "FirstLaunchSessionRevision" },
+    "id": { "type": "string", "pattern": "^first-launch-revision-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/sha256" },
+    "sessionId": { "type": "string", "pattern": "^first-launch-[a-f0-9]{24}$" },
+    "sessionFingerprint": { "$ref": "#/$defs/sha256" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "sourceCommit": { "type": "string", "pattern": "^[a-fA-F0-9]{40,64}$" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "previousFingerprint": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/sha256" }] },
+    "checkpoint": {
+      "enum": [
+        "bootstrap-human", "configuration-human", "waiting-launch-settings",
+        "candidate-control-ready", "candidate-plan-ready", "candidate-profile-ready",
+        "candidate-approval-ready", "candidate-preflight-ready", "candidate-run-started",
+        "candidate-provider-stage-succeeded", "database-inspect-plan-ready",
+        "database-inspect-profile-ready", "database-inspect-approval-ready",
+        "database-inspect-preflight-ready", "database-inspect-run-started",
+        "database-inspect-stage-succeeded", "database-apply-plan-ready",
+        "database-runtime-profile-ready", "database-apply-profile-ready",
+        "database-apply-approval-ready", "database-apply-preflight-ready",
+        "database-apply-run-started", "database-migrated",
+        "verification-plan-ready", "candidate-verified", "cutover-handoff-ready",
+        "cutover-plan-ready", "cutover-profile-ready",
+        "cutover-approval-ready", "cutover-preflight-ready", "cutover-run-started",
+        "cutover-applied", "email-delivery-plan-ready", "email-delivery-approval-ready",
+        "email-delivery-run-started", "email-delivery-succeeded",
+        "production-verification-observed", "production-verified",
+        "rollback-plan-ready", "rollback-approval-ready", "rollback-run-started", "rolled-back"
+      ]
+    },
+    "configurationRecipeRef": { "$ref": "#/$defs/nullableRef" },
+    "configurationHandoffRef": { "$ref": "#/$defs/nullableRef" },
+    "configurationAttestationRef": { "$ref": "#/$defs/nullableRef" },
+    "manifestRef": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["fingerprint", "recipeId", "recipeFingerprint"],
+          "properties": {
+            "fingerprint": { "$ref": "#/$defs/sha256" },
+            "recipeId": { "type": "string", "pattern": "^recipe-[a-f0-9]{24}$" },
+            "recipeFingerprint": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      ]
+    },
+    "artifactRef": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "kind", "digest", "sourceCommit"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+            "kind": { "enum": ["source-archive", "vercel-file-manifest", "runtime-build"] },
+            "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "sourceCommit": { "type": "string", "pattern": "^[a-fA-F0-9]{40,64}$" }
+          }
+        }
+      ]
+    },
+    "graphRef": { "$ref": "#/$defs/nullableRef" },
+    "launchConfigurationRef": { "$ref": "#/$defs/nullableRef" },
+    "adapterPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "sandboxProfileRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "candidateApprovalRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "sandboxPreflightRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/preflightRef" }
+    },
+    "candidateRunRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidateRunRef" }
+    },
+    "migrationPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "databaseInspectPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "databaseInspectProfileRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "databaseInspectApprovalRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "databaseInspectPreflightRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/preflightRef" }
+    },
+    "databaseInspectRunRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidateRunRef" }
+    },
+    "backupEvidenceRef": { "$ref": "#/$defs/nullableRef" },
+    "databaseApplyPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "databaseRuntimeProfileRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "databaseApplyProfileRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "databaseApplyApprovalRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "databaseApplyPreflightRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/databasePreflightRef" }
+    },
+    "databaseApplyRunRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/databaseRunRef" }
+    },
+    "verificationPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "candidateEvidenceRef": { "$ref": "#/$defs/nullableRef" },
+    "cutoverHandoffRef": { "$ref": "#/$defs/nullableRef" },
+    "cutoverAttestationRef": { "$ref": "#/$defs/nullableRef" },
+    "dnsChangeSetRef": { "$ref": "#/$defs/nullableRef" },
+    "cutoverPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "cutoverProfileRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "cutoverApprovalRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "cutoverPreflightRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/preflightRef" }
+    },
+    "cutoverRunRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidateRunRef" }
+    },
+    "emailDeliveryPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "emailDeliveryApprovalRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "emailDeliveryRunRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/emailDeliveryRunRef" }
+    },
+    "productionVerificationRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "productionEvidenceRef": { "$ref": "#/$defs/nullableRef" },
+    "rollbackPlanRef": { "$ref": "#/$defs/nullableRef" },
+    "rollbackApprovalRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "rollbackRunRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/rollbackRunRef" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "fingerprint"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "fingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "preflightRef": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "id", "fingerprint", "profileId", "profileFingerprint", "approvalId", "approvalFingerprint"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^sandbox-preflight-[a-f0-9]{24}$" },
+        "fingerprint": { "$ref": "#/$defs/sha256" },
+        "profileId": { "type": "string", "pattern": "^sandbox-[a-f0-9]{24}$" },
+        "profileFingerprint": { "$ref": "#/$defs/sha256" },
+        "approvalId": { "type": "string", "pattern": "^approval-[a-f0-9-]+$" },
+        "approvalFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "candidateRunRef": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "id", "revision", "fingerprint", "adapterPlanId", "adapterPlanFingerprint",
+        "profileId", "profileFingerprint", "preflightId", "preflightFingerprint"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^launch-[a-f0-9-]+$" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "fingerprint": { "$ref": "#/$defs/sha256" },
+        "adapterPlanId": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+        "adapterPlanFingerprint": { "$ref": "#/$defs/sha256" },
+        "profileId": { "type": "string", "pattern": "^sandbox-[a-f0-9]{24}$" },
+        "profileFingerprint": { "$ref": "#/$defs/sha256" },
+        "preflightId": { "type": "string", "pattern": "^sandbox-preflight-[a-f0-9]{24}$" },
+        "preflightFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "databasePreflightRef": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "id", "fingerprint", "profileId", "profileFingerprint", "approvalId", "approvalFingerprint",
+        "databaseRuntimeProfileId", "databaseRuntimeProfileFingerprint"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^sandbox-preflight-[a-f0-9]{24}$" },
+        "fingerprint": { "$ref": "#/$defs/sha256" },
+        "profileId": { "type": "string", "pattern": "^sandbox-[a-f0-9]{24}$" },
+        "profileFingerprint": { "$ref": "#/$defs/sha256" },
+        "approvalId": { "type": "string", "pattern": "^approval-[a-f0-9-]+$" },
+        "approvalFingerprint": { "$ref": "#/$defs/sha256" },
+        "databaseRuntimeProfileId": { "type": "string", "pattern": "^database-runtime-[a-f0-9]{24}$" },
+        "databaseRuntimeProfileFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "databaseRunRef": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "id", "revision", "fingerprint", "adapterPlanId", "adapterPlanFingerprint",
+        "profileId", "profileFingerprint", "preflightId", "preflightFingerprint",
+        "databaseRuntimeProfileId", "databaseRuntimeProfileFingerprint"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^launch-[a-f0-9-]+$" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "fingerprint": { "$ref": "#/$defs/sha256" },
+        "adapterPlanId": { "type": "string", "pattern": "^adapter-plan-[a-f0-9]{24}$" },
+        "adapterPlanFingerprint": { "$ref": "#/$defs/sha256" },
+        "profileId": { "type": "string", "pattern": "^sandbox-[a-f0-9]{24}$" },
+        "profileFingerprint": { "$ref": "#/$defs/sha256" },
+        "preflightId": { "type": "string", "pattern": "^sandbox-preflight-[a-f0-9]{24}$" },
+        "preflightFingerprint": { "$ref": "#/$defs/sha256" },
+        "databaseRuntimeProfileId": { "type": "string", "pattern": "^database-runtime-[a-f0-9]{24}$" },
+        "databaseRuntimeProfileFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "rollbackRunRef": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "id", "revision", "fingerprint", "rollbackPlanId", "rollbackPlanFingerprint",
+        "approvalId", "approvalFingerprint"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^rollback-run-[a-f0-9-]{36}$" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "fingerprint": { "$ref": "#/$defs/sha256" },
+        "rollbackPlanId": { "type": "string", "pattern": "^rollback-plan-[a-f0-9]{24}$" },
+        "rollbackPlanFingerprint": { "$ref": "#/$defs/sha256" },
+        "approvalId": { "type": "string", "pattern": "^rollback-approval-[a-f0-9-]{36}$" },
+        "approvalFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "emailDeliveryRunRef": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "id", "revision", "fingerprint", "planId", "planFingerprint",
+        "approvalId", "approvalFingerprint"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^email-delivery-run-[a-f0-9-]{36}$" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "fingerprint": { "$ref": "#/$defs/sha256" },
+        "planId": { "type": "string", "pattern": "^email-delivery-plan-[a-f0-9]{24}$" },
+        "planFingerprint": { "$ref": "#/$defs/sha256" },
+        "approvalId": { "type": "string", "pattern": "^email-delivery-approval-[a-f0-9-]{36}$" },
+        "approvalFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "nullableRef": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/ref" }] }
+  }
+}

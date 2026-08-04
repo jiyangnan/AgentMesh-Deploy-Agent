@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgentMesh Deploy — 把产品上线交给一个有边界的运维 Agent</title>
+  <meta name="description" content="AgentMesh Deploy 是独立的开源发布运维 Agent：只读分析产品仓库，编排 Vercel、Railway、Neon、Supabase、Cloudflare 与 Resend，在明确审批后部署、迁移、验证和恢复。" />
+  <meta property="og:title" content="AgentMesh Deploy — 独立发布运维 Agent" />
+  <meta property="og:description" content="产品代码默认只读。部署计划、供应商变更、数据库迁移、DNS、邮件与恢复证据全部在外部控制平面中完成。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://deploy.agentmesh360.com/" />
+  <meta property="og:image" content="https://deploy.agentmesh360.com/assets/deploy-control-plane.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="theme-color" content="#087a62" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=product-mark-v1" />
+  <link rel="canonical" href="https://deploy.agentmesh360.com/" />
+  <link rel="alternate" hreflang="zh-CN" href="https://deploy.agentmesh360.com/" />
+  <link rel="alternate" hreflang="en" href="https://deploy.agentmesh360.com/en/" />
+  <link rel="alternate" hreflang="ja" href="https://deploy.agentmesh360.com/ja/" />
+  <link rel="alternate" hreflang="ko" href="https://deploy.agentmesh360.com/ko/" />
+  <link rel="alternate" hreflang="x-default" href="https://deploy.agentmesh360.com/" />
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="AgentMesh Deploy LLMs.txt" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600&family=Noto+Serif+SC:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script defer src="/assets/site.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://agentmesh360.com/#organization",
+        "name": "AgentMesh360",
+        "url": "https://agentmesh360.com/"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://deploy.agentmesh360.com/#software",
+        "name": "AgentMesh Deploy",
+        "url": "https://deploy.agentmesh360.com/",
+        "codeRepository": "https://github.com/jiyangnan/AgentMesh-Deploy-Agent",
+        "license": "https://www.apache.org/licenses/LICENSE-2.0",
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "deployment operations agent",
+        "operatingSystem": "macOS, Windows, Linux",
+        "softwareVersion": "0.2.1",
+        "isAccessibleForFree": true,
+        "provider": { "@id": "https://agentmesh360.com/#organization" },
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "需要把已完成产品从 Git 仓库安全部署到云服务的开发者、独立开发者与小团队"
+        },
+        "description": "独立的开源发布运维 Agent，只读分析产品仓库，通过外部控制平面编排供应商、审批、部署、迁移、验证与恢复。",
+        "featureList": [
+          "锁定不可变 Git Commit",
+          "只读分析产品仓库",
+          "外部部署控制平面",
+          "供应商计划与精确审批",
+          "数据库迁移与恢复证据",
+          "DNS 与邮件域名编排",
+          "中断后的事实对账与恢复"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "CNY",
+          "availability": "https://schema.org/InStock"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://deploy.agentmesh360.com/#website",
+        "url": "https://deploy.agentmesh360.com/",
+        "name": "AgentMesh Deploy",
+        "inLanguage": "zh-CN",
+        "publisher": { "@id": "https://agentmesh360.com/#organization" }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://deploy.agentmesh360.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "AgentMesh Deploy 适合谁？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "适合已经完成产品开发，希望由 AI Agent 分析 Git 仓库并编排 Vercel、Railway、Neon、Supabase、Cloudflare 或 Resend 上线流程，同时保留费用、数据库、DNS、邮件和生产切流人工审批权的开发者与小团队。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "AgentMesh Deploy 会把文件写进产品仓库吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "默认不会。产品仓库是只读来源，部署状态保存在外部 Control Home；确实需要改代码时只生成独立 Patch 提案。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "使用 AgentMesh Deploy 需要 AgentMesh360 账户吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "不需要。AgentMesh Deploy 是 Apache 2.0 开源 CLI；用户需要目标供应商自己的账号和最小权限凭证。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script defer src="https://analytics.agentmesh360.com/script.js" data-website-id="dde37bb1-f07e-4a10-a349-719b4149923b" data-domains="deploy.agentmesh360.com"></script>
+</head>
+<body data-product-contract="independent-deploy-agent-v1" data-release="v0.2.1">
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="AgentMesh Deploy"><span class="brand-mark" aria-hidden="true"></span>AgentMesh Deploy <small>· AgentMesh360</small></a>
+      <nav class="nav-links" aria-label="主导航">
+        <a class="nav-section" href="#capabilities">能力</a>
+        <a class="nav-section" href="#boundary">边界</a>
+        <a class="nav-section" href="#workflow">流程</a>
+        <a class="nav-section" href="#faq">FAQ</a>
+        <span class="langs" aria-label="语言"><a aria-current="page">中</a><a href="/en/">EN</a><a href="/ja/">日</a><a href="/ko/">한</a></span>
+        <a class="nav-cta" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-copy">
+          <div class="eyebrow">Open source · Independent operations agent</div>
+          <h1>AgentMesh Deploy<span class="hero-line">把产品上线，交给一个有边界的运维 Agent。</span></h1>
+          <p class="lede">完成开发后，把 Git 仓库交给 AgentMesh Deploy。它锁定 Commit、分析技术栈、选择供应商、生成计划；只有在你批准费用、数据库迁移、DNS 和生产切流之后，才执行真实变更。产品仓库默认只读，部署状态永远留在独立控制平面。</p>
+          <div class="hero-actions">
+            <a class="btn btn-secondary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">查看开源仓库 →</a>
+            <a class="btn btn-secondary" href="#install">安装 v0.2.1</a>
+            <a class="btn btn-primary" data-purchase-cta href="https://agentmesh360.com/app/#pricing">开通 AgentMesh360 通行证</a>
+          </div>
+          <p class="pass-note"><strong>AgentMesh Deploy 本身开源免费，不需要通行证。</strong>这个入口用于购买 Lecturecast、CreatorCut 等 AgentMesh360 云端产品的共享通行证。</p>
+          <ul class="proof" aria-label="发布信息">
+            <li>Apache 2.0</li>
+            <li>Node.js 20+</li>
+            <li>版本化公开契约</li>
+            <li>GitHub Release v0.2.1</li>
+          </ul>
+          <div class="agent-handoff" data-agent-handoff>
+            <div class="agent-handoff-top">
+              <span class="agent-handoff-label">复制给你的 Agent · 运维交接指令</span>
+              <button class="copy-agent-prompt" type="button" data-copy-prompt data-copied-label="已复制" data-failed-label="复制失败" aria-label="复制 AgentMesh Deploy 运维交接指令">复制指令</button>
+            </div>
+            <pre data-agent-prompt>请读取 https://github.com/jiyangnan/AgentMesh-Deploy-Agent ，安装最新稳定版 AgentMesh Deploy，并以独立运维 Agent 的方式接管当前产品的上线。
+
+先只读分析仓库并锁定当前 Git Commit；不得修改产品仓库的 Remote、Index、工作区、历史，也不得修改任何现有认证、账号、权限或会话体系。
+
+请输出推荐的供应商路线、预算、所需凭证、数据库迁移、DNS / Resend 与回滚方案。任何费用、供应商 Mutation、数据库写入、DNS 变更、真实邮件、生产切流或删除之前，都必须先向我申请明确批准。</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-white">
+      <div class="wrap section-head">
+        <div><div class="kicker">为什么需要它</div><h2>开发完成，不等于已经上线。</h2></div>
+        <p class="section-copy">域名、服务器、数据库、邮件、环境变量、CI/CD、迁移、健康检查和回滚，通常散落在不同供应商后台。AgentMesh Deploy 把这些动作变成<strong>可审阅、可批准、可恢复</strong>的一条发布链，让开发 Agent 把上线工作交接给专门的运维 Agent。</p>
+      </div>
+    </section>
+
+    <section class="band" id="architecture">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">独立控制平面</div><h2>一个 Deploy Agent，接手多个产品。</h2></div>
+          <p class="section-copy">AgentMesh Deploy 不把 Sidecar 写进产品仓库。它从锁定 Commit 创建隔离 Checkout，把 Manifest、Plan、Approval、Evidence 和 Run 放在外部 Control Home；需要改产品代码时，只生成 Patch 建议。</p>
+        </div>
+        <img class="architecture" src="/assets/deploy-control-plane.png" width="1600" height="900" alt="多个只读产品仓库进入 AgentMesh Deploy，经过外部控制平面和人工审批后连接运行时、数据库、DNS 与邮件供应商" />
+        <p class="caption">产品仓库是只读输入；供应商变更必须经过外部计划、审批和证据链。</p>
+      </div>
+    </section>
+
+    <section class="band band-white" id="capabilities">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">核心能力</div><h2>从代码快照，到可验证的线上结果。</h2></div>
+          <p class="section-copy">每一步都绑定同一个 Commit、Graph 和计划指纹。失败时先对账已经发生的供应商事实，再决定 Resume 或人工接管，不盲目重复创建资源。</p>
+        </div>
+        <div class="capabilities">
+          <article class="capability"><span class="cap-num">01 / SOURCE</span><h3>只读分析仓库</h3><p>锁定 Git Commit，在隔离 Checkout 中识别框架、构建命令、环境需求和部署形态，不改工作区、Remote 或历史。</p></article>
+          <article class="capability"><span class="cap-num">02 / PLAN</span><h3>自动编译供应商计划</h3><p>从高层 Launch Configuration 生成确定性的 Adapter Plan，把运行时、数据库、DNS 与邮件动作排成可审阅顺序。</p></article>
+          <article class="capability"><span class="cap-num">03 / APPROVAL</span><h3>预算和权限分闸</h3><p>网络、供应商 Mutation、费用、数据库迁移和生产切流分别授权。没有准确 Approval，就在调用 API 前停止。</p></article>
+          <article class="capability"><span class="cap-num">04 / DATABASE</span><h3>迁移前先留证据</h3><p>读取 Schema、分类 SQL、创建 Snapshot 或 Backup Evidence，再执行绑定目标版本的迁移；Down、Restore 和 Delete 单独审批。</p></article>
+          <article class="capability"><span class="cap-num">05 / EDGE</span><h3>DNS 与邮件联合编排</h3><p>使用精确 DNS Change Set 配置网站和 Resend 域名，保留变更前事实；不会用模糊匹配覆盖现有记录。</p></article>
+          <article class="capability"><span class="cap-num">06 / RECOVERY</span><h3>中断后可恢复</h3><p>Intent 先落盘，Receipt 后记账。进程中断后优先读取供应商事实并接管已创建资源，避免重复收费和重复资源。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">供应商适配</div><h2>一条工作流，连接六个核心供应商。</h2></div>
+          <p class="section-copy">v0.2.1 已公开六家核心 Adapter 契约。凭证只通过 Secret Ref 使用，Token、连接串和私钥不进入 Plan、Run、State 或日志。</p>
+        </div>
+        <div class="providers" aria-label="支持的供应商">
+          <div class="provider"><strong>Vercel</strong><span>Frontend / Preview</span></div>
+          <div class="provider"><strong>Railway</strong><span>Runtime / Service</span></div>
+          <div class="provider"><strong>Neon</strong><span>Postgres / Branch</span></div>
+          <div class="provider"><strong>Supabase</strong><span>Backend / Database</span></div>
+          <div class="provider"><strong>Cloudflare</strong><span>DNS / Edge</span></div>
+          <div class="provider"><strong>Resend</strong><span>Email / Domain</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-white" id="boundary">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">人机边界</div><h2>Agent 跑流程，人掌握最终权限。</h2></div>
+          <p class="section-copy">自动化的价值不是绕开人，而是把人只留在真正需要承担责任的节点。其他重复、易错、跨平台的工作交给 Agent 完成。</p>
+        </div>
+        <div class="boundary">
+          <div class="boundary-row">
+            <div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent 自动完成</span><h3>发现与规划</h3><p>分析仓库、读取官方供应商能力、生成架构选项、计算预期资源和变更次数。</p></div>
+            <div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">人必须确认</span><h3>账号与凭证</h3><p>注册供应商账号、完成实名或支付、创建最小权限 Token，并决定是否交给 Secret Backend。</p></div>
+          </div>
+          <div class="boundary-row">
+            <div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent 自动完成</span><h3>候选环境与验证</h3><p>创建隔离项目、部署锁定 Commit、检查 HTTPS、API、数据库版本和邮件域名状态。</p></div>
+            <div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">人必须确认</span><h3>费用与数据风险</h3><p>批准付费套餐、购买域名、执行迁移或恢复，以及任何可能影响现有数据的动作。</p></div>
+          </div>
+          <div class="boundary-row">
+            <div class="boundary-cell agent-side" data-boundary="agent"><span class="boundary-label">Agent 自动完成</span><h3>证据、Resume 与回滚计划</h3><p>保存不可变 Receipt、检测漂移、对账不确定写入并生成准确的恢复步骤。</p></div>
+            <div class="boundary-cell human-side" data-boundary="human"><span class="boundary-label">人必须确认</span><h3>生产切流与删除</h3><p>批准正式 DNS、真实邮件发送、生产流量切换、资源删除和破坏性数据库操作。</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="workflow">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">首次上线流程</div><h2>让你的开发 Agent，完成一次运维交接。</h2></div>
+          <p class="section-copy">CLI 返回结构化的 `nextActions`。接手 Agent 不需要猜下一步，也不需要直接登录六个后台逐个试错。</p>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="step-num">01</span><h3>注册产品</h3><p>提供本地仓库或远程 Git 地址，AgentMesh Deploy 只记录来源并锁定不可变 Commit。</p></div>
+          <div class="step"><span class="step-num">02</span><h3>分析并选择方案</h3><p>识别框架与依赖，比较 Vercel、Railway、Neon、Supabase 等路线，再由你确认供应商和预算。</p></div>
+          <div class="step"><span class="step-num">03</span><h3>配置受限凭证</h3><p>根据 CLI 指引创建最小权限 Token，保存到 Keychain、1Password 或其他 Secret Backend，只登记引用。</p></div>
+          <div class="step"><span class="step-num">04</span><h3>部署候选环境</h3><p>通过 Sandbox Profile、Approval 和 Preflight 后创建隔离资源，部署锁定 Commit 并完成候选验证。</p></div>
+          <div class="step"><span class="step-num">05</span><h3>审批生产切流</h3><p>查看数据库、DNS、邮件与回滚证据。只有你明确批准后，才执行生产变更和最终验证。</p></div>
+        </div>
+
+        <div class="terminal" id="install" aria-label="安装示例">
+          <div class="terminal-top">agentmesh-deploy · GitHub Release install</div>
+          <pre><span class="prompt">$</span> gh release download v0.2.1 --repo jiyangnan/AgentMesh-Deploy-Agent --pattern 'agentmesh-deploy-*.tgz'
+<span class="prompt">$</span> npm install --global ./agentmesh-deploy-0.2.1.tgz
+<span class="prompt">$</span> agentmesh-deploy version
+<span class="success">0.2.1</span>
+
+<span class="prompt">$</span> agentmesh-deploy project add --repo /path/to/product --id my-saas --name "My SaaS" --json
+<span class="prompt">$</span> agentmesh-deploy analyze my-saas --json
+<span class="output">nextActions → review configuration → connect providers → sandbox preflight</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-white" id="guides">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">部署 Agent 指南</div><h2>自动化上线，不等于放弃生产控制权。</h2></div>
+          <p class="section-copy">从 AI 部署 Agent 的工作方式和审批门禁两条路径，理解哪些步骤可自动编排，哪些动作必须由人准确授权。</p>
+        </div>
+        <div class="steps">
+          <article class="step"><span class="step-num">GUIDE 01</span><h3>什么是 AI 部署 Agent</h3><p>了解不可变 Commit、只读仓库分析、外部 Control Home、供应商计划、候选验证和恢复证据。</p><p><a class="link" href="/guides/ai-deployment-agent/">阅读部署 Agent 指南 →</a></p></article>
+          <article class="step"><span class="step-num">GUIDE 02</span><h3>为什么 DevOps 需要审批门禁</h3><p>从预算、数据库、DNS、邮件、生产切流与删除风险，设计范围准确、时效明确的人工授权。</p><p><a class="link" href="/guides/approval-gated-devops/">阅读审批门禁指南 →</a></p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-white" id="faq">
+      <div class="wrap">
+        <div class="kicker">常见问题</div>
+        <h2>FAQ.</h2>
+        <div class="faq">
+          <details><summary>AgentMesh Deploy 适合谁？</summary><div class="faq-answer">适合已经完成产品开发，希望由 AI Agent 分析 Git 仓库并编排 Vercel、Railway、Neon、Supabase、Cloudflare 或 Resend 上线流程，同时保留费用、数据库、DNS、邮件和生产切流人工审批权的开发者、独立开发者与小团队。</div></details>
+          <details><summary>它会把文件写进我的产品仓库吗？</summary><div class="faq-answer">V2 默认不会。产品仓库是只读来源，部署状态保存在外部 Control Home。确实需要改代码时，只生成独立 Patch 提案，由仓库负责人决定是否应用。</div></details>
+          <details><summary>使用 AgentMesh Deploy 需要 AgentMesh360 账户吗？</summary><div class="faq-answer">不需要。它是 Apache 2.0 开源 CLI。你需要的是目标供应商自己的账号和最小权限凭证；供应商产生的费用也由你的供应商账户承担。</div></details>
+          <details><summary>它能自动购买域名、升级套餐或切换生产流量吗？</summary><div class="faq-answer">可以规划并引导相关流程，但不会默认执行。购买、付费升级、数据库风险、正式 DNS、邮件发送、生产切流与删除都需要单独、准确的当前任务授权。</div></details>
+          <details><summary>凭证会保存在哪里？</summary><div class="faq-answer">持久对象只保存 Secret Ref，例如 <code>keychain://</code>、<code>op://</code> 或自定义 <code>secret://</code>。真实 Token 与连接串不会进入 Plan、Run、State、Receipt 或日志。</div></details>
+          <details><summary>中途断线会不会创建重复资源？</summary><div class="faq-answer">Mutation 会先写 Intent，再写 Receipt。中断后 Resume 会先读取供应商事实并对账，只有确定资源不存在且预算仍允许时才会重新执行。</div></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="band closing">
+      <div class="wrap section-head">
+        <div><div class="kicker">开始交接</div><h2>下一个产品开发完，直接把上线交给 Deploy Agent。</h2></div>
+        <div><p class="section-copy">从公开仓读取安装与 Agent 指引。先在测试项目上完成只读分析和 Sandbox，再决定是否批准真实供应商变更。</p><div class="hero-actions"><a class="btn btn-primary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">打开 GitHub →</a><a class="btn btn-secondary" href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/releases/tag/v0.2.1">查看 v0.2.1 Release</a></div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div><div class="brand"><span class="brand-mark" aria-hidden="true"></span>AgentMesh Deploy <small>· AgentMesh360</small></div><div>独立、可审计、由人掌握最终权限。</div></div>
+      <div class="foot-links"><a href="https://agentmesh360.com">AgentMesh360</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/releases">Releases</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent/blob/main/LICENSE">Apache 2.0</a><span>© 2026</span></div>
+    </div>
+  </footer>
+</body>
+</html>

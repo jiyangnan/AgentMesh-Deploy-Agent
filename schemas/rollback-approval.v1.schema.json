@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/rollback-approval.v1.json",
+  "title": "AgentMesh Deploy Rollback Approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId",
+    "graphFingerprint", "rollbackPlanId", "rollbackPlanFingerprint", "stepIds",
+    "decision", "limits", "approvedBy", "approvedAt", "expiresAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "RollbackApproval" },
+    "id": { "type": "string", "pattern": "^rollback-approval-[a-f0-9-]{36}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "rollbackPlanId": { "type": "string", "pattern": "^rollback-plan-[a-f0-9]{24}$" },
+    "rollbackPlanFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "stepIds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "enum": ["dns.restore", "database.rollback"] }
+    },
+    "decision": { "const": "approved" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxProviderMutations", "allowDatabaseRestore"],
+      "properties": {
+        "maxProviderMutations": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "allowDatabaseRestore": { "type": "boolean" }
+      }
+    },
+    "approvedBy": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "approvedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/email-delivery-plan.v1.json",
+  "title": "AgentMesh Deploy Email Delivery Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "sourceCommit",
+    "graphId", "graphFingerprint", "configurationId", "configurationFingerprint",
+    "verificationPlanId", "verificationPlanFingerprint", "emailCheckId", "emailDomain",
+    "provisioningConnection", "sendingConnection", "fromLocalPart", "recipientSecretRef",
+    "limits", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "EmailDeliveryPlan" },
+    "id": { "type": "string", "pattern": "^email-delivery-plan-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/fingerprint" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "sourceCommit": { "type": "string", "pattern": "^[0-9a-fA-F]{40}$" },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "verificationPlanId": { "type": "string", "pattern": "^verification-plan-[a-f0-9]{24}$" },
+    "verificationPlanFingerprint": { "$ref": "#/$defs/fingerprint" },
+    "emailCheckId": { "const": "production.email.delivery" },
+    "emailDomain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "name", "evidenceRef", "evidenceFingerprint"],
+      "properties": {
+        "providerId": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "format": "hostname" },
+        "evidenceRef": { "type": "string", "minLength": 1 },
+        "evidenceFingerprint": { "$ref": "#/$defs/fingerprint" }
+      }
+    },
+    "provisioningConnection": { "$ref": "#/$defs/connection" },
+    "sendingConnection": { "$ref": "#/$defs/connection" },
+    "fromLocalPart": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9._+-]{0,62}[a-z0-9])?$" },
+    "recipientSecretRef": { "type": "string", "minLength": 1 },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxEmails", "maxRecipients", "timeoutSeconds", "minimumPollSeconds"],
+      "properties": {
+        "maxEmails": { "const": 1 },
+        "maxRecipients": { "const": 1 },
+        "timeoutSeconds": { "const": 86400 },
+        "minimumPollSeconds": { "const": 30 }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "authMethod", "scope", "credentialRef"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62})$" },
+        "version": { "type": "integer", "minimum": 1 },
+        "authMethod": { "enum": ["provisioning-key", "sending-key"] },
+        "scope": { "type": "string", "minLength": 1 },
+        "credentialRef": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

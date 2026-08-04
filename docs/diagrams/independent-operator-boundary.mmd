@@ -1,0 +1,20 @@
+flowchart LR
+  OWNER["产品负责人<br/>审批高风险动作"] --> AMD["独立 AgentMesh Deploy<br/>CLI / 运维 Agent"]
+
+  A["产品 A 仓库<br/>默认只读"] --> AMD
+  B["产品 B 仓库<br/>默认只读"] --> AMD
+  C["产品 C 仓库<br/>默认只读"] --> AMD
+
+  AMD --> REG["Project Registry<br/>项目注册与 Source Ref"]
+  AMD --> WS["Isolated Workspace<br/>Commit Checkout / Overlay / Artifact"]
+  AMD --> STATE["Control State<br/>Approval / Evidence / Runs"]
+  AMD --> PROVIDERS["Provider API / CLI / SSH<br/>DNS / Runtime / DB / Mail / CI"]
+
+  REG --> HOME["AGENTMESH_DEPLOY_HOME<br/>默认 ~/.agentmesh-deploy/"]
+  WS --> HOME
+  STATE --> HOME
+
+  AMD -.->|"需要修改产品代码"| PATCH["Patch / PR 建议<br/>代码所有者审阅合并"]
+  PATCH -.-> A
+  PATCH -.-> B
+  PATCH -.-> C

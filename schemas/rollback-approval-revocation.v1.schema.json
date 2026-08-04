@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/rollback-approval-revocation.v1.json",
+  "title": "AgentMesh Deploy Rollback Approval Revocation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "fingerprint", "projectId", "graphFingerprint",
+    "rollbackPlanId", "rollbackPlanFingerprint", "approvalId", "approvalFingerprint",
+    "revokedBy", "revokedAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "RollbackApprovalRevocation" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "rollbackPlanId": { "type": "string", "pattern": "^rollback-plan-[a-f0-9]{24}$" },
+    "rollbackPlanFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "approvalId": { "type": "string", "pattern": "^rollback-approval-[a-f0-9-]{36}$" },
+    "approvalFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "revokedBy": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "revokedAt": { "type": "string", "format": "date-time" }
+  }
+}

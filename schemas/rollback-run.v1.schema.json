@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/rollback-run.v1.json",
+  "title": "AgentMesh Deploy Rollback Run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId",
+    "graphFingerprint", "rollbackPlanId", "rollbackPlanFingerprint", "approvalId",
+    "approvalFingerprint", "revision", "status", "stepStates", "providerMutationsExecuted",
+    "databaseMutationsExecuted", "createdAt", "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "RollbackRun" },
+    "id": { "type": "string", "pattern": "^rollback-run-[a-f0-9-]{36}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "rollbackPlanId": { "type": "string", "pattern": "^rollback-plan-[a-f0-9]{24}$" },
+    "rollbackPlanFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "approvalId": { "type": "string", "pattern": "^rollback-approval-[a-f0-9-]{36}$" },
+    "approvalFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "databaseRuntimeProfileId": { "type": "string", "pattern": "^(?:|database-runtime-[a-f0-9]{24})$" },
+    "databaseRuntimeProfileFingerprint": { "type": "string", "pattern": "^(?:|sha256:[a-f0-9]{64})$" },
+    "status": { "enum": ["ready", "running", "partially-succeeded", "succeeded", "failed-retryable", "failed-terminal"] },
+    "stepStates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dns.restore", "release.retain", "database.rollback", "verification.repeat"],
+      "properties": {
+        "dns.restore": { "$ref": "#/$defs/stepState" },
+        "release.retain": { "$ref": "#/$defs/stepState" },
+        "database.rollback": { "$ref": "#/$defs/stepState" },
+        "verification.repeat": { "$ref": "#/$defs/stepState" }
+      }
+    },
+    "providerMutationsExecuted": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "databaseMutationsExecuted": { "type": "integer", "minimum": 0, "maximum": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "dependentRequired": {
+    "databaseRuntimeProfileId": ["databaseRuntimeProfileFingerprint"],
+    "databaseRuntimeProfileFingerprint": ["databaseRuntimeProfileId"]
+  },
+  "$defs": {
+    "stepState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "attempt", "resultRef", "lastError", "updatedAt"],
+      "properties": {
+        "status": { "enum": ["planned", "ready", "running", "succeeded", "blocked", "not-required", "failed-retryable", "failed-terminal"] },
+        "attempt": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "resultRef": { "type": ["string", "null"], "maxLength": 2048 },
+        "lastError": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["code", "retryable"],
+              "properties": {
+                "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{0,63}$" },
+                "retryable": { "type": "boolean" }
+              }
+            }
+          ]
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

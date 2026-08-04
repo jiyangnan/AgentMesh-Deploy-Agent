@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 部署 Agent：如何分析仓库、编排云服务并安全上线产品</title>
+  <meta name="description" content="AI 部署 Agent 实用指南：从只读仓库分析、供应商配置、候选环境、数据库与 DNS 审批，到生产验证和恢复，了解 AgentMesh Deploy 的边界。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://deploy.agentmesh360.com/guides/ai-deployment-agent/" />
+  <meta property="og:title" content="AI 部署 Agent：从仓库分析到安全上线" />
+  <meta property="og:description" content="部署 Agent 不该只会执行命令。它要把计划、供应商、费用、审批、证据和恢复绑定在同一次发布里。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://deploy.agentmesh360.com/guides/ai-deployment-agent/" />
+  <meta property="og:image" content="https://deploy.agentmesh360.com/assets/deploy-control-plane.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=product-mark-v1" />
+  <link rel="stylesheet" href="/seo.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {"@type": "Article", "headline": "AI 部署 Agent：如何分析仓库、编排云服务并安全上线产品", "datePublished": "2026-07-30", "dateModified": "2026-07-30", "inLanguage": "zh-CN", "author": {"@type": "Organization", "name": "AgentMesh360", "url": "https://agentmesh360.com/"}},
+      {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "AgentMesh Deploy", "item": "https://deploy.agentmesh360.com/"},
+        {"@type": "ListItem", "position": 2, "name": "AI 部署 Agent", "item": "https://deploy.agentmesh360.com/guides/ai-deployment-agent/"}
+      ]},
+      {"@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": "AgentMesh Deploy 会直接修改产品仓库吗？", "acceptedAnswer": {"@type": "Answer", "text": "默认不会。产品仓库是只读来源；需要修改代码时，Deploy 只生成独立 Patch 提案，由仓库负责人决定是否应用。"}},
+        {"@type": "Question", "name": "它支持哪些云服务？", "acceptedAnswer": {"@type": "Answer", "text": "产品面向 Vercel、Railway、Neon、Supabase、Cloudflare 与 Resend 等供应商的部署编排。实际操作范围取决于项目配置、连接和用户授权。"}},
+        {"@type": "Question", "name": "部署 Agent 能否自动切换生产流量？", "acceptedAnswer": {"@type": "Answer", "text": "不会默认执行。数据库风险、正式 DNS、邮件发送、付费升级和生产切流都需要单独、准确的当前任务授权。"}}
+      ]}
+    ]
+  }
+  </script>
+</head>
+<body data-product-contract="independent-deploy-agent-v1">
+  <header class="site-nav"><div class="container nav-inner"><a class="brand" href="/">AgentMesh Deploy</a><nav class="nav-links" aria-label="页面导航"><a href="/guides/approval-gated-devops/">审批式 DevOps</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a><a href="https://agentmesh360.com/products/">产品目录</a></nav></div></header>
+  <main>
+    <section class="hero"><div class="container"><p class="eyebrow">AI Deployment Agent Guide</p><h1>把产品上线交给 Agent，不能把生产权限也一起交出去。</h1><p class="lead">部署 Agent 的价值不只是生成几条 CLI 命令。它要理解仓库与架构，规划供应商资源，在候选环境验证，并把费用、数据库、DNS、邮件和生产切流留给用户逐项批准。</p><div class="hero-actions"><a class="button primary" href="/">查看 AgentMesh Deploy</a><a class="button" href="#workflow">看部署链路</a></div></div></section>
+    <article class="container article">
+      <nav class="toc" aria-label="本页目录"><strong>本页内容</strong><a href="#problems">部署难点</a><a href="#workflow">完整链路</a><a href="#providers">供应商职责</a><a href="#faq">常见问题</a></nav>
+      <section id="problems">
+        <h2>产品上线真正难的，是把多个系统变成一个可恢复过程</h2>
+        <div class="grid">
+          <article class="card"><h3>仓库事实会变化</h3><p>框架、构建命令、环境变量、数据库迁移和静态资源都绑定具体 Commit。部署计划如果不锁定源码版本，验证过的内容和实际上线内容可能不是同一份。</p></article>
+          <article class="card"><h3>供应商之间有依赖顺序</h3><p>应用、数据库、域名、邮件和密钥并非独立。数据库连接需要先可用，DNS 不能在候选尚未验证时提前切换。</p></article>
+          <article class="card"><h3>成功响应不等于产品可用</h3><p>构建成功、容器健康和首页 200 都只是局部证据。真实发布还要检查登录、关键协议、静态资源、消费者兼容和回滚点。</p></article>
+          <article class="card"><h3>中断会制造重复资源</h3><p>请求超时后直接重试可能重复购买、创建实例或迁移。恢复必须先读取供应商事实并对账。</p></article>
+        </div>
+      </section>
+      <section id="workflow">
+        <h2>AgentMesh Deploy 的五步上线链路</h2>
+        <ol class="checklist">
+          <li><strong>只读分析仓库：</strong>识别框架、服务、环境变量、数据库、域名和构建方式，记录锁定 Commit 与指纹。</li>
+          <li><strong>生成部署计划：</strong>把供应商动作、依赖、预算、风险、证据和恢复路径写入外部 Control Home。</li>
+          <li><strong>连接最小权限凭证：</strong>持久对象只保存 Secret Ref，不把真实 Token、连接串和私钥写入计划或日志。</li>
+          <li><strong>部署候选环境：</strong>先完成 Sandbox、Preflight 和候选验证，避免直接在生产环境摸索。</li>
+          <li><strong>审批生产切流：</strong>用户查看数据库、DNS、邮件、费用与回滚证据后，对当前对象给出精确授权，再执行生产变更与最终验证。</li>
+        </ol>
+        <div class="callout"><strong>产品仓库默认只读。</strong>部署状态、供应商回执、审批和恢复记录放在仓库外控制平面。需要源代码变化时，只生成 Patch 提案，不把部署工具变成仓库里的隐形作者。</div>
+      </section>
+      <section id="providers">
+        <h2>不同供应商在部署链路中负责什么</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>供应商</th><th>典型职责</th><th>需要重点审批的风险</th></tr></thead>
+            <tbody>
+              <tr><td>Vercel</td><td>前端与 Web 应用构建、预览和生产部署</td><td>环境变量、域名绑定、生产分支</td></tr>
+              <tr><td>Railway</td><td>服务、Worker 和运行时资源</td><td>实例规格、持久卷、公开端口与费用</td></tr>
+              <tr><td>Neon / Supabase</td><td>PostgreSQL、连接与迁移目标</td><td>迁移、数据保留、连接范围和回滚</td></tr>
+              <tr><td>Cloudflare</td><td>DNS、代理、边缘规则与域名入口</td><td>正式 DNS、缓存和生产流量切换</td></tr>
+              <tr><td>Resend</td><td>事务邮件域名与发送</td><td>DNS 验证、真实收件人与发送授权</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>如果你最关心“Agent 在什么动作前必须停下”，继续阅读 <a href="/guides/approval-gated-devops/">审批式 DevOps 指南</a>。</p>
+      </section>
+      <section id="faq" class="faq">
+        <h2>常见问题</h2>
+        <details><summary>会直接修改产品仓库吗？</summary><p>默认不会。仓库是只读来源；需要改代码时，只生成 Patch 提案，由仓库负责人决定是否应用。</p></details>
+        <details><summary>支持哪些云服务？</summary><p>面向 Vercel、Railway、Neon、Supabase、Cloudflare 与 Resend 等供应商，实际范围取决于项目配置、连接和授权。</p></details>
+        <details><summary>能自动切生产流量吗？</summary><p>不会默认执行。数据库、正式 DNS、邮件、付费升级与生产切流需要单独、准确的当前任务授权。</p></details>
+      </section>
+      <section><div class="related"><h2>从只读分析开始</h2><p>查看 <a href="/">AgentMesh Deploy 产品页</a>的安装方式、架构图和第一条 Agent handoff 指令。</p></div></section>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span>AgentMesh Deploy · Independent deployment control plane</span><div class="footer-links"><a href="/">产品首页</a><a href="https://github.com/jiyangnan/AgentMesh-Deploy-Agent">GitHub</a><a href="https://agentmesh360.com/">AgentMesh360</a></div></div></footer>
+</body>
+</html>

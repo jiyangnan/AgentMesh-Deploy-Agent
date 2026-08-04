@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/deployment-manifest.v2.json",
+  "title": "AgentMesh Deploy V2 Deployment Manifest",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "projectId", "sourceRef"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "kind": { "const": "DeploymentManifest" },
+    "projectId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,62}$" },
+    "sourceRef": { "$ref": "#/$defs/sourceRef" },
+    "intent": { "type": "object" },
+    "app": { "type": "object" },
+    "requirements": { "type": "object" },
+    "providers": { "type": "object" },
+    "requiredConnections": { "type": "array" },
+    "recipeRef": { "type": "object" },
+    "runtime": { "type": "object" },
+    "commands": { "type": "object" },
+    "env": { "type": "object" },
+    "verification": { "type": "object" },
+    "fingerprint": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "migration": { "type": "object" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "required": ["kind", "locator", "commit"],
+      "properties": {
+        "kind": { "enum": ["local-git", "remote-git"] },
+        "locator": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[a-fA-F0-9]{40,64}$" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

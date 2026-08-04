@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://deploy.agentmesh360.com/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://deploy.agentmesh360.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://deploy.agentmesh360.com/en/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://deploy.agentmesh360.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://deploy.agentmesh360.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://deploy.agentmesh360.com/" />
+    <lastmod>2026-07-30</lastmod>
+  </url>
+  <url><loc>https://deploy.agentmesh360.com/en/</loc><lastmod>2026-07-30</lastmod></url>
+  <url><loc>https://deploy.agentmesh360.com/ja/</loc><lastmod>2026-07-30</lastmod></url>
+  <url><loc>https://deploy.agentmesh360.com/ko/</loc><lastmod>2026-07-30</lastmod></url>
+  <url><loc>https://deploy.agentmesh360.com/guides/ai-deployment-agent/</loc><lastmod>2026-07-30</lastmod></url>
+  <url><loc>https://deploy.agentmesh360.com/guides/approval-gated-devops/</loc><lastmod>2026-07-30</lastmod></url>
+</urlset>

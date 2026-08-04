@@ -1,0 +1,23 @@
+flowchart TD
+  A["产品 A / B / C 仓库<br/>默认只读"] --> B["project add / analyze"]
+  B --> C["外部控制工作区<br/>~/.agentmesh-deploy/projects/<id>"]
+
+  C --> C1["project.json + manifest.json<br/>Source Ref、目标、供应商策略"]
+  C --> C2["state.json<br/>资源 ID、IP、zoneId、repoUrl"]
+  C --> C3["workspaces/<run-id><br/>临时 Checkout、Overlay、Artifact"]
+  C --> C4["approvals / evidence / handoffs / runs<br/>审批、证据、交接、恢复"]
+
+  C --> D["validate / schema"]
+  D --> E["plan<br/>stable fingerprint"]
+  E --> F["doctor / status / secrets"]
+  F --> G["prepare<br/>refresh review + diff + handoff evidence"]
+  G --> H["apply dry-run"]
+  H --> I{"Explicit approval?"}
+
+  I -->|"No"| H
+  I -->|"--execute --yes<br/>--allow-provider-mutations<br/>--allow-cost-mutations"| J["真实执行"]
+
+  J --> K["供应商创建 / 接管 / 捕获状态"]
+  K --> L["CI/CD or remote deploy"]
+  L --> M["HTTP verify"]
+  M --> N["state/runs record<br/>next agent can continue"]

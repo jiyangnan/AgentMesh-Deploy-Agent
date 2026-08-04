@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/product-verification-plan.v1.json",
+  "title": "AgentMesh Deploy Product Verification Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "graphId",
+    "graphFingerprint", "configurationId", "configurationFingerprint", "contractId",
+    "requirements", "checks", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "ProductVerificationPlan" },
+    "id": { "type": "string", "pattern": "^verification-plan-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string", "pattern": "^graph-[a-f0-9]{24}$" },
+    "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "configurationId": { "type": "string", "pattern": "^launch-config-[a-f0-9]{24}$" },
+    "configurationFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "contractId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+    "requirements": { "$ref": "#/$defs/requirements" },
+    "checks": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "api", "database", "auth", "email", "rollback"],
+      "properties": {
+        "runtime": { "type": "boolean" },
+        "api": { "type": "boolean" },
+        "database": { "type": "boolean" },
+        "auth": { "type": "boolean" },
+        "email": { "type": "boolean" },
+        "rollback": { "type": "boolean" }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "contractCheckId", "phase", "capability", "mode", "required",
+        "method", "path", "expectedStatuses", "expectedContentTypes", "timeoutMs",
+        "secretRefs", "handoff"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^(candidate|production)\\.[a-z0-9][a-z0-9._-]{0,126}$" },
+        "contractCheckId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+        "phase": { "enum": ["candidate", "production"] },
+        "capability": { "enum": ["https", "api", "release", "database", "auth", "email-domain", "email-delivery", "rollback"] },
+        "mode": { "enum": ["http", "control", "runtime", "human"] },
+        "required": { "type": "boolean" },
+        "method": { "type": ["string", "null"], "enum": ["GET", "HEAD", null] },
+        "path": { "type": "string", "maxLength": 512 },
+        "expectedStatuses": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 100, "maximum": 599 }
+        },
+        "expectedContentTypes": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+$", "maxLength": 127 }
+        },
+        "timeoutMs": { "type": "integer", "minimum": 100, "maximum": 30000 },
+        "secretRefs": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(env://[A-Z][A-Z0-9_]*|(?:keychain|op|secret)://[A-Za-z0-9._/-]+)$"
+          }
+        },
+        "handoff": { "type": "string", "maxLength": 256 }
+      }
+    }
+  }
+}

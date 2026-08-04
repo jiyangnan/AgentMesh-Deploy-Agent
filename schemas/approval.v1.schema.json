@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/approval.v1.json",
+  "title": "AgentMesh Deploy Approval",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "id", "projectId", "graphId", "graphFingerprint", "nodeIds", "decision", "approvedBy", "approvedAt", "expiresAt", "fingerprint"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "Approval" },
+    "id": { "type": "string", "pattern": "^approval-[a-f0-9-]+$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "graphId": { "type": "string" },
+    "graphFingerprint": { "type": "string" },
+    "nodeIds": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+    "decision": { "const": "approved" },
+    "limits": { "type": "object" },
+    "approvedBy": { "type": "string", "minLength": 1 },
+    "approvedAt": { "type": "string" },
+    "expiresAt": { "type": "string" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}

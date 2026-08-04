@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/first-launch-session.v1.json",
+  "title": "AgentMesh Deploy First Launch Session V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "sourceRef", "recipeRef",
+    "bootstrapPlanRef", "bootstrapHandoffRef", "owner", "deadline", "secretBackend",
+    "workflowVersion", "status", "safety", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "FirstLaunchSession" },
+    "id": { "type": "string", "pattern": "^first-launch-[a-f0-9]{24}$" },
+    "fingerprint": { "$ref": "#/$defs/sha256" },
+    "projectId": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62})$" },
+    "sourceRef": { "$ref": "#/$defs/sourceRef" },
+    "recipeRef": { "$ref": "#/$defs/ref" },
+    "bootstrapPlanRef": { "$ref": "#/$defs/ref" },
+    "bootstrapHandoffRef": { "$ref": "#/$defs/ref" },
+    "owner": { "$ref": "#/$defs/actor" },
+    "deadline": { "type": "string", "format": "date-time" },
+    "secretBackend": { "enum": ["env", "keychain"] },
+    "workflowVersion": { "const": 1 },
+    "status": { "const": "active" },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "providerProbesAllowed", "providerMutationsAllowed", "secretValuesAllowed",
+        "browserActionsAllowed", "productRepositoryWritesAllowed"
+      ],
+      "properties": {
+        "providerProbesAllowed": { "const": false },
+        "providerMutationsAllowed": { "const": false },
+        "secretValuesAllowed": { "const": false },
+        "browserActionsAllowed": { "const": false },
+        "productRepositoryWritesAllowed": { "const": false }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "actor": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$" },
+    "sourceRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "locator", "commit"],
+      "properties": {
+        "kind": { "enum": ["local-git", "remote-git"] },
+        "locator": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[a-fA-F0-9]{40,64}$" }
+      }
+    },
+    "ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "fingerprint"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "fingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

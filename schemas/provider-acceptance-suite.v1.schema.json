@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentmesh360.com/schemas/provider-acceptance-suite.v1.json",
+  "title": "AgentMesh Deploy Provider Acceptance Suite",
+  "type": "object",
+  "required": [
+    "schemaVersion", "kind", "id", "fingerprint", "projectId", "sourceCommit",
+    "requiredProviders", "requiredCapabilities", "sources", "coverage", "status", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "ProviderAcceptanceSuite" },
+    "id": { "type": "string", "pattern": "^acceptance-suite-[a-f0-9]{24}$" },
+    "fingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" },
+    "requiredProviders": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+    "requiredCapabilities": { "type": "array", "items": { "$ref": "#/$defs/providerMethods" } },
+    "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } },
+    "coverage": { "type": "array", "items": { "$ref": "#/$defs/coverage" } },
+    "status": { "enum": ["passed", "incomplete"] },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "providerMethod": {
+      "type": "object", "required": ["provider", "method"],
+      "properties": { "provider": { "type": "string" }, "method": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "providerMethods": {
+      "type": "object", "required": ["provider", "methods"],
+      "properties": {
+        "provider": { "type": "string" },
+        "methods": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "runId", "runRevision", "runFingerprint", "graphId", "graphFingerprint",
+        "adapterPlanId", "adapterPlanFingerprint", "reportId", "reportFingerprint",
+        "reportStatus", "reportCreatedAt", "methods"
+      ],
+      "properties": {
+        "runId": { "type": "string" },
+        "runRevision": { "type": "integer", "minimum": 1 },
+        "runFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "graphId": { "type": "string" },
+        "graphFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "adapterPlanId": { "type": "string" },
+        "adapterPlanFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "reportId": { "type": "string" },
+        "reportFingerprint": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "reportStatus": { "enum": ["passed", "not-qualified"] },
+        "reportCreatedAt": { "type": "string", "format": "date-time" },
+        "methods": { "type": "array", "items": { "$ref": "#/$defs/providerMethod" } }
+      },
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object", "required": ["provider", "requiredMethods", "coveredMethods", "missingMethods", "reportIds", "status"],
+      "properties": {
+        "provider": { "type": "string" },
+        "requiredMethods": { "type": "array", "items": { "type": "string" } },
+        "coveredMethods": { "type": "array", "items": { "type": "string" } },
+        "missingMethods": { "type": "array", "items": { "type": "string" } },
+        "reportIds": { "type": "array", "items": { "type": "string" } },
+        "status": { "enum": ["passed", "incomplete"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
