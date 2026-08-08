@@ -53,8 +53,8 @@ The existence of an adapter contract does not mean every provider operation is a
 
 ## Languages
 
-- Chinese: https://deploy.agentmesh360.com/
-- English: https://deploy.agentmesh360.com/en/
+- English (default): https://deploy.agentmesh360.com/
+- Chinese: https://deploy.agentmesh360.com/zh/
 - Japanese: https://deploy.agentmesh360.com/ja/
 - Korean: https://deploy.agentmesh360.com/ko/
 

@@ -6,10 +6,11 @@ const root = path.resolve(process.argv[2] ?? 'site');
 const analyticsWebsiteId = 'dde37bb1-f07e-4a10-a349-719b4149923b';
 const mainWebsiteId = '1a85e912-04b3-4ad9-a1f2-15416d15311f';
 const pages = new Map([
-  ['index.html', 'zh-CN'],
-  ['en/index.html', 'en'],
-  ['ja/index.html', 'ja'],
-  ['ko/index.html', 'ko'],
+  ['index.html', { lang: 'en', pricingUrl: 'https://agentmesh360.com/app/#pricing' }],
+  ['zh/index.html', { lang: 'zh-CN', pricingUrl: 'https://agentmesh360.com/app/?lang=zh-CN#pricing' }],
+  ['en/index.html', { lang: 'en', pricingUrl: 'https://agentmesh360.com/app/#pricing' }],
+  ['ja/index.html', { lang: 'ja', pricingUrl: 'https://agentmesh360.com/app/?lang=ja#pricing' }],
+  ['ko/index.html', { lang: 'ko', pricingUrl: 'https://agentmesh360.com/app/?lang=ko#pricing' }],
 ]);
 const requiredFiles = [
   ...pages.keys(),
@@ -35,7 +36,7 @@ for (const relative of requiredFiles) {
 
 if (fs.existsSync(path.join(root, 'CNAME'))) fail('CNAME is forbidden; production is served by shared Caddy');
 
-for (const [relative, lang] of pages) {
+for (const [relative, { lang, pricingUrl }] of pages) {
   const source = fs.readFileSync(path.join(root, relative), 'utf8');
   const requirements = [
     `<html lang="${lang}"`,
@@ -55,7 +56,7 @@ for (const [relative, lang] of pages) {
     'data-copy-prompt',
     'data-agent-prompt',
     'data-purchase-cta',
-    'https://agentmesh360.com/app/#pricing',
+    pricingUrl,
     'pass-note',
     'Vercel',
     'Railway',
@@ -82,12 +83,12 @@ for (const requirement of ['read-only sources by default', 'external Control Hom
   if (!llms.includes(requirement)) fail(`llms.txt is missing ${requirement}`);
 }
 
-const landing = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const guideLanding = fs.readFileSync(path.join(root, 'zh/index.html'), 'utf8');
 const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
 for (const route of ['/guides/ai-deployment-agent/', '/guides/approval-gated-devops/']) {
   const guide = fs.readFileSync(path.join(root, route, 'index.html'), 'utf8');
   const canonical = `https://deploy.agentmesh360.com${route}`;
-  if (!landing.includes(`href="${route}"`)) fail(`index.html is missing guide link ${route}`);
+  if (!guideLanding.includes(`href="${route}"`)) fail(`zh/index.html is missing guide link ${route}`);
   if (!guide.includes(`rel="canonical" href="${canonical}"`)) fail(`${route} is missing its canonical URL`);
   if (!guide.includes('type="application/ld+json"')) fail(`${route} is missing JSON-LD`);
   if (!sitemap.includes(`<loc>${canonical}</loc>`)) fail(`sitemap.xml is missing ${canonical}`);
