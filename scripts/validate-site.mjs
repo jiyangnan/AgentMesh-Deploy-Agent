@@ -5,8 +5,8 @@ import process from 'node:process';
 const root = path.resolve(process.argv[2] ?? 'site');
 // The expected release is derived from the manifest that ships next to the
 // site: a real package.json in the exported/public tree, or the export
-// template (whose version placeholder matches the site template's
-// data-release="v{{VERSION}}") inside the private source tree.
+// template inside the private source tree, whose version placeholder
+// matches the site template's data-release placeholder.
 const manifestNeighbor = [
   path.join(root, '..', 'package.json'),
   path.join(root, '..', 'package.template.json'),
