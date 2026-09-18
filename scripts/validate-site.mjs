@@ -3,6 +3,16 @@ import path from 'node:path';
 import process from 'node:process';
 
 const root = path.resolve(process.argv[2] ?? 'site');
+// The expected release is derived from the manifest that ships next to the
+// site: a real package.json in the exported/public tree, or the export
+// template (whose version placeholder matches the site template's
+// data-release="v{{VERSION}}") inside the private source tree.
+const manifestNeighbor = [
+  path.join(root, '..', 'package.json'),
+  path.join(root, '..', 'package.template.json'),
+].find((candidate) => fs.existsSync(candidate));
+if (!manifestNeighbor) fail('missing sibling package.json to derive the expected release');
+const expectedRelease = `data-release="v${JSON.parse(fs.readFileSync(manifestNeighbor, 'utf8')).version}"`;
 const analyticsWebsiteId = 'dde37bb1-f07e-4a10-a349-719b4149923b';
 const mainWebsiteId = '1a85e912-04b3-4ad9-a1f2-15416d15311f';
 const pages = new Map([
@@ -41,7 +51,7 @@ for (const [relative, { lang, pricingUrl }] of pages) {
   const requirements = [
     `<html lang="${lang}"`,
     'data-product-contract="independent-deploy-agent-v1"',
-    'data-release="v0.2.1"',
+    expectedRelease,
     'data-boundary="agent"',
     'data-boundary="human"',
     'https://deploy.agentmesh360.com/',
