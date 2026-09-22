@@ -87,6 +87,19 @@
 <span class="output">nextActions → review configuration → connect providers → sandbox preflight</span></pre></div>
     </div></section>
 
+    <section class="band band-white" id="guides">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">배포 Agent 가이드</div><h2>자동화된 릴리스가 프로덕션 제어권을 포기하는 것은 아닙니다.</h2></div>
+          <p class="section-copy">AI 배포 Agent의 작동 방식과 승인 게이트라는 두 경로를 통해, 자동으로 오케스트레이션할 수 있는 단계와 사람의 정확한 승인이 필요한 작업을 이해합니다. (가이드 본문은 중국어입니다.)</p>
+        </div>
+        <div class="steps">
+          <article class="step"><span class="step-num">GUIDE 01</span><h3>AI 배포 Agent란</h3><p>불변 Commit, 읽기 전용 리포지토리 분석, 외부 Control Home, 공급자 플랜, 후보 검증, 복구 증거를 알아봅니다.</p><p><a class="link" href="/guides/ai-deployment-agent/">배포 Agent 가이드 읽기(중국어) →</a></p></article>
+          <article class="step"><span class="step-num">GUIDE 02</span><h3>DevOps에 승인 게이트가 필요한 이유</h3><p>예산, 데이터베이스, DNS, 이메일, 프로덕션 전환, 삭제 위험에 대해 범위가 정확하고 기한이 명확한 수동 승인을 설계합니다.</p><p><a class="link" href="/guides/approval-gated-devops/">승인 게이트 가이드 읽기(중국어) →</a></p></article>
+        </div>
+      </div>
+    </section>
+
     <section class="band band-white" id="faq"><div class="wrap"><div class="kicker">자주 묻는 질문</div><h2>FAQ.</h2><div class="faq">
       <details><summary>제품 저장소에 파일을 쓰나요?</summary><div class="faq-answer">V2는 기본적으로 쓰지 않습니다. 상태는 외부 Control Home에 저장하며 코드 변경이 필요하면 독립된 Patch 제안만 만듭니다.</div></details>
       <details><summary>AgentMesh360 계정이 필요한가요?</summary><div class="faq-answer">필요하지 않습니다. Apache 2.0 오픈소스 CLI입니다. 대상 공급자 계정과 최소 권한 자격 증명은 필요합니다.</div></details>

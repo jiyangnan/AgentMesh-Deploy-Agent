@@ -111,6 +111,19 @@
 <span class="output">nextActions → review configuration → connect providers → sandbox preflight</span></pre></div>
     </div></section>
 
+    <section class="band band-white" id="guides">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">デプロイ Agent ガイド</div><h2>リリースの自動化は、本番環境の制御権を手放すことではありません。</h2></div>
+          <p class="section-copy">AI デプロイ Agent の仕組みと承認ゲートという2つの視点から、自動で編成できるステップと、人の正確な承認が必要なアクションを理解します。（ガイド本文は中国語です）</p>
+        </div>
+        <div class="steps">
+          <article class="step"><span class="step-num">GUIDE 01</span><h3>AI デプロイ Agent とは</h3><p>不変 Commit、読み取り専用リポジトリ分析、外部 Control Home、プロバイダープラン、候補検証、復旧エビデンスを理解します。</p><p><a class="link" href="/guides/ai-deployment-agent/">デプロイ Agent ガイドを読む（中国語）→</a></p></article>
+          <article class="step"><span class="step-num">GUIDE 02</span><h3>DevOps に承認ゲートが必要な理由</h3><p>予算、データベース、DNS、メール、本番切り替え、削除リスクに対して、範囲が正確で期限の明確な人的承認を設計します。</p><p><a class="link" href="/guides/approval-gated-devops/">承認ゲートガイドを読む（中国語）→</a></p></article>
+        </div>
+      </div>
+    </section>
+
     <section class="band band-white" id="faq"><div class="wrap"><div class="kicker">よくある質問</div><h2>FAQ.</h2><div class="faq">
       <details><summary>製品リポジトリへファイルを書き込みますか？</summary><div class="faq-answer">V2 は原則書き込みません。状態は外部 Control Home に保存し、コード変更が必要な場合は独立した Patch 案を作成します。</div></details>
       <details><summary>AgentMesh360 アカウントは必要ですか？</summary><div class="faq-answer">不要です。Apache 2.0 のオープンソース CLI です。対象プロバイダーのアカウントと最小権限の認証情報は必要です。</div></details>
