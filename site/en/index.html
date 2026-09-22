@@ -99,6 +99,19 @@ Return the recommended provider route, budget, required credentials, database mi
 <span class="output">nextActions → review configuration → connect providers → sandbox preflight</span></pre></div>
     </div></section>
 
+    <section class="band band-white" id="guides">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">Deployment Agent guides</div><h2>Automated releases don't mean giving up production control.</h2></div>
+          <p class="section-copy">Two paths — how an AI deployment agent works, and why approval gates — show which steps can be orchestrated automatically and which actions require precise human authorization. (Guide content is in Chinese.)</p>
+        </div>
+        <div class="steps">
+          <article class="step"><span class="step-num">GUIDE 01</span><h3>What is an AI deployment agent</h3><p>Learn about immutable commits, read-only repository analysis, the external Control Home, provider plans, candidate verification, and recovery evidence.</p><p><a class="link" href="/guides/ai-deployment-agent/">Read the deployment agent guide (Chinese) →</a></p></article>
+          <article class="step"><span class="step-num">GUIDE 02</span><h3>Why DevOps needs approval gates</h3><p>Design precise, time-bound human authorization across budgets, databases, DNS, email, production cutover, and deletion risk.</p><p><a class="link" href="/guides/approval-gated-devops/">Read the approval-gates guide (Chinese) →</a></p></article>
+        </div>
+      </div>
+    </section>
+
     <section class="band band-white" id="faq"><div class="wrap"><div class="kicker">Common questions</div><h2>FAQ.</h2><div class="faq">
       <details><summary>Will it write files into my product repository?</summary><div class="faq-answer">V2 does not by default. The product repository is a read-only source and deployment state lives in an external Control Home. Required code changes are emitted as patch proposals for the repository owner.</div></details>
       <details><summary>Do I need an AgentMesh360 account?</summary><div class="faq-answer">No. AgentMesh Deploy is an Apache 2.0 open-source CLI. You need accounts and least-privilege credentials for the providers you choose, and provider costs remain on those accounts.</div></details>
