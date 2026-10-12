@@ -31,6 +31,55 @@
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"AgentMesh Deploy","url":"https://deploy.agentmesh360.com/","codeRepository":"https://github.com/jiyangnan/AgentMesh-Deploy-Agent","provider":{"@type":"Organization","@id":"https://agentmesh360.com/#organization","name":"AgentMesh360","url":"https://agentmesh360.com/","logo":"https://agentmesh360.com/agentmesh360-icon.png?v=transparent-2","sameAs":["https://github.com/jiyangnan"]},"license":"https://www.apache.org/licenses/LICENSE-2.0","applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"0.2.1","isAccessibleForFree":true,"description":"製品リポジトリを読み取り専用で分析し、承認、デプロイ、移行、検証、復旧を外部コントロールプレーンで管理する独立運用 Agent。"}
   </script>
   <script defer src="https://analytics.agentmesh360.com/script.js" data-website-id="dde37bb1-f07e-4a10-a349-719b4149923b" data-domains="deploy.agentmesh360.com"></script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "inLanguage": "ja",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "製品リポジトリへファイルを書き込みますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "V2 は原則書き込みません。状態は外部 Control Home に保存し、コード変更が必要な場合は独立した Patch 案を作成します。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "AgentMesh360 アカウントは必要ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不要です。Apache 2.0 のオープンソース CLI です。対象プロバイダーのアカウントと最小権限の認証情報は必要です。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ドメイン購入や本番切り替えも自動ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "計画と案内はできますが、既定では実行しません。購入、課金、DB リスク、正式 DNS、メール送信、本番切り替え、削除には個別の承認が必要です。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "認証情報はどこへ保存しますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "永続オブジェクトには keychain://、op://、secret:// などの Secret Ref だけを保存します。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "中断時にリソースが重複しませんか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Intent の後に Receipt を記録します。Resume はプロバイダー上の事実を先に照合し、存在と予算を確認してから再実行します。"
+          }
+        }
+      ]
+    }
+  </script>
 </head>
 <body data-product-contract="independent-deploy-agent-v1" data-release="v0.2.1">
   <header class="nav">
