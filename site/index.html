@@ -31,6 +31,55 @@
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"AgentMesh Deploy","url":"https://deploy.agentmesh360.com/","codeRepository":"https://github.com/jiyangnan/AgentMesh-Deploy-Agent","provider":{"@type":"Organization","@id":"https://agentmesh360.com/#organization","name":"AgentMesh360","url":"https://agentmesh360.com/","logo":"https://agentmesh360.com/agentmesh360-icon.png?v=transparent-2","sameAs":["https://github.com/jiyangnan"]},"license":"https://www.apache.org/licenses/LICENSE-2.0","applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Windows, Linux","softwareVersion":"0.2.1","isAccessibleForFree":true,"description":"An independent open-source deployment operations agent that analyzes product repositories and orchestrates providers through an external approval and evidence control plane."}
   </script>
   <script defer src="https://analytics.agentmesh360.com/script.js" data-website-id="dde37bb1-f07e-4a10-a349-719b4149923b" data-domains="deploy.agentmesh360.com"></script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "inLanguage": "en",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will it write files into my product repository?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "V2 does not by default. The product repository is a read-only source and deployment state lives in an external Control Home. Required code changes are emitted as patch proposals for the repository owner."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need an AgentMesh360 account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. AgentMesh Deploy is an Apache 2.0 open-source CLI. You need accounts and least-privilege credentials for the providers you choose, and provider costs remain on those accounts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it buy domains, upgrade plans, or switch production traffic automatically?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can plan and guide those workflows, but it never performs them by default. Purchases, paid upgrades, database risk, production DNS, email sending, cutover, and deletion each require explicit current authorization."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where are credentials stored?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Persistent objects store only Secret Refs such as keychain://, op://, or custom secret:// references. Raw values never enter Plan, Run, State, Receipt, or logs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an interrupted run create duplicate resources?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mutations persist intent before the call and a receipt after it. Resume checks provider facts first and replays only when the resource is proven absent and the budget still allows it."
+          }
+        }
+      ]
+    }
+  </script>
 </head>
 <body data-product-contract="independent-deploy-agent-v1" data-release="v0.2.1">
   <header class="nav"><div class="nav-inner">
